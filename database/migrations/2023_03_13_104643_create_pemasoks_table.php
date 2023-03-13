@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Pelanggan extends Migration
+class CreatePemasoksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class Pelanggan extends Migration
      */
     public function up()
     {
-         Schema::create('pelanggan', function (Blueprint $table) {
-            // $table->id();
-            $table->string('id',30)->primary();
-            $table->string('nama',30)->unique();
-            $table->string('no_telp',13);
+        Schema::create('pemasoks', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama');
+            $table->string('kontak');
             $table->string('alamat');
-            $table->rememberToken();
+            $table->timestamps();
         });
     }
 
@@ -30,7 +29,6 @@ class Pelanggan extends Migration
      */
     public function down()
     {
-        
-        Schema::dropIfExists('pelanggan');
+        Schema::dropIfExists('pemasoks');
     }
 }

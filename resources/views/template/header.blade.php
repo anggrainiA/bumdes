@@ -1,11 +1,12 @@
-<?php $foto = Session::get('user') == null ? 'profil_holder.png' : Session::get('user')['file']; ?>
-<!-- Top Bar Start -->
-<div class="topbar">
+ 
+ <?php $foto = Session::get('user') == null ? 'profil_holder.png' : Session::get('user')['file'];  ?>
+ <!-- Top Bar Start -->
+ <div class="topbar">
     <!-- LOGO -->
     <div class="topbar-left">
         <div class="text-center">
-            <a href="index.html" class="logo"><img src={{ asset('images/horizon.png') }} width="200"></a>
-            <a href="index.html" class="logo-sm"><img src={{ asset('images/favicon.ico') }} height="36"></a>
+            <a href="index.html" class="logo"><img src={{ asset("images/horizon.png") }} width="200"></a>
+            <a href="index.html" class="logo-sm"><img src={{ asset("images/favicon.ico") }} height="36"></a>
         </div>
     </div>
     <!-- Button mobile view to collapse sidebar menu -->
@@ -22,23 +23,21 @@
                 <!--  -->
                 <ul class="nav navbar-nav navbar-right pull-right">
                     <li class="dropdown hidden-xs">
-                        <a href="#" data-target="#" class="dropdown-toggle waves-effect waves-light"
-                            data-toggle="dropdown" aria-expanded="true">
+                        <a href="#" data-target="#" class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="true">
                             <i class="fa fa-bell"></i> <span class="badge badge-xs badge-danger">1</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg">
-                            <li class="text-center notifi-title">Notification <span
-                                    class="badge badge-xs badge-success">1</span></li>
+                            <li class="text-center notifi-title">Notification <span class="badge badge-xs badge-success">1</span></li>
                             <li class="list-group">
-                                <!-- list item-->
-                                <a href="" class="list-group-item">
-                                    <div class="media">
-                                        <div class="media-heading">Gas tersisa 10</div>
-                                        <p class="m-0">
-                                            <small>BUMDes perlu untuk membeli Gas.</small>
-                                        </p>
-                                    </div>
-                                </a>
+                               <!-- list item-->
+                               <a href="" class="list-group-item">
+                                  <div class="media">
+                                     <div class="media-heading">Gas tersisa 10</div>
+                                     <p class="m-0">
+                                       <small>BUMDes perlu untuk membeli Gas.</small>
+                                     </p>
+                                  </div>
+                               </a>
                                 {{-- <a href="#" class="list-group-item">
                                   <div class="media">
                                      <div class="media-body clearfix">
@@ -66,21 +65,16 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="" class="dropdown-toggle profile waves-effect waves-light"
-                            data-toggle="dropdown" aria-expanded="true"><img src={{ asset('images/' . $foto) }}
-                                alt="user-img" class="img-circle" /></a>
+                        <a href="" class="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true"><img src={{ asset("images/".$foto) }} alt="user-img" class="img-circle"/></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ route('get.profiluser') }}"> Profile</a></li>
+                            <li><a href="" class="dropdown-item"> Profile</a></li>
                             <li class="divider"></li>
                             <!--  -->
                             <form action="/logout" method="post">
                                 @csrf
-                                <button type="submit"class="btn" and
-                                    style="background-color:transparent; margin-left:.3rem">
-                                    <li><a style="color: red " class="dropdown-item">Keluar</a></li>
-                                </button>
+                               <button type="submit"class="btn" and style="background-color:transparent; margin-left:.3rem" ><li><a style="color: red " class="dropdown-item">Keluar</a></li></button>
                             </form>
-                            <!--  -->
+                             <!--  -->
                         </ul>
                     </li>
                 </ul>

@@ -33,10 +33,11 @@
                                     <div class="conbtn">
                                         <div class="mx-auto text-center">
                                             <form style="padding-right: 25px">
-                                                <img class="rounded-circle m-b-5" {{-- @if (count($bumdes) > 0) src="{{ asset('images/' . $bumdes['file']) }}"
+                                                <img class="rounded-circle m-b-5"
+                                                    @if (count($bumdes) > 0) src="{{ asset('images/' . $bumdes['file']) }}"
                                                     @else src="{{ asset('images/profil_holder.png') }}" @endif
-                                                    alt=""> --}} <p
-                                                    id="file-name"><br></p>
+                                                    alt="">
+                                                <p id="file-name"><br></p>
                                                 <div class="modal-footer m-t-8">
                                                     <div class="mx-auto text-right">
 
@@ -64,24 +65,25 @@
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Nama Pengguna</label>
                                                     <input type="text" class="form-control" name="nama"
-                                                        value="{{ Auth::user()->nama }}" placeholder="Nama Lengkap Anda">
+                                                        @if (count($bumdes) > 0) value="{{ $bumdes['nama'] }}" @endif
+                                                        placeholder="Nama Lengkap Anda">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Alamat Pengguna</label>
                                                     <input type="text" class="form-control" name="alamat"
-                                                        value="{{ Auth::user()->alamat }}"
+                                                        @if (count($bumdes) > 0) value="{{ $bumdes['alamat'] }}" @endif
                                                         placeholder="Alamat atau Tempat Tinggal Anda">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Nomor Telepon Pengguna</label>
-                                                    <input type="text" class="form-control" name="no_telp"
-                                                        value="{{ Auth::user()->no_telp }}"
+                                                    <input type="text" class="form-control" name="no_ketua"
+                                                        @if (count($bumdes) > 0) value="{{ $bumdes['no_ketua'] }}" @endif
                                                         placeholder="Nomor Telepon Anda">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Status Pengguna</label>
-                                                    <input type="text" disabled="disabled" class="form-control"
-                                                        name="no_benda" value={{ Auth::user()->status }}
+                                                    <input type="text" disabled="disabled" class="form-control" name="no_benda"
+                                                        @if (count($bumdes) > 0) value="Pencatat Transaksi" @endif
                                                         placeholder="Pencatat Transaksi">
                                                 </div>
                                                 <div class="modal-footer">
@@ -101,7 +103,7 @@
                     </div>
                 </div>
             </div>
-
+            
         </div>
 
     </div> <!-- container -->
@@ -112,7 +114,8 @@
 
 
     <!-- sample modal edit foto -->
-    <div id="foto" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="foto" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -120,15 +123,15 @@
                     <h4 class="modal-title" id="myModalLabel">Pilih Foto Profil</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('post.profiluser') }}" method="POST" class="form-horizontal" role="form"
-                        enctype="multipart/form-data">
+                    <form action="{{ route('post.profiluser') }}" method="POST" class="form-horizontal"
+                        role="form" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="jenis" value=3>
                         <div class="form-group">
                             <label class="col-md-4 control-label">Foto</label>
                             <div class="col-md-8">
                                 <input class="form-control" name="file" type="file" id="file"
-                                    onchange="validateFile()" required />
+                                onchange="validateFile()" required />
                             </div>
                         </div>
 

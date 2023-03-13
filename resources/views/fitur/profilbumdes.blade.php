@@ -35,11 +35,9 @@
                                 <div class="col-sm-6 col-xs-12">
                                     <div class="conbtn">
                                         <div class="mx-auto text-center">
-                                            <form style="padding-right: 25px">
-                                                <img class="img-circle rounded-circle m-b-5"
-                                                    @if (count($bumdes) > 0) src="{{ asset('images/' . $bumdes['file']) }}"
-                                                    @else src="{{ asset('images/defaultbumdes.png') }}" @endif
-                                                    alt="">
+                                            <form style="padding-right: 25px" >
+                                                <img class="img-circle rounded-circle m-b-5"alt="">
+                                                  
                                                 <p id="file-name"><br></p>
                                                 
                                                 <div class="modal-footer m-t-8">
@@ -63,41 +61,38 @@
 
                                         <div class="mx-auto text-left">
                                             <form style="padding-right: 25px" method="POST"
-                                                action="{{ route('post.profilbumdes') }}">
+                                                action="{{route('updateprofilbumdes')}}">
                                                 @csrf
+                                                @foreach($data as $item)
+                            
                                                 <input type="hidden" name="jenis" value=4>
+                                                <input type="hidden" name="id" value="{{$item['id']}}">
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Nama BUMDes</label>
-                                                    <input type="text" class="form-control" name="nama"
-                                                        @if (count($bumdes) > 0) value="{{ $bumdes['nama'] }}" @endif
-                                                        placeholder="Nama BUMDes">
+                                                    <input type="text" class="form-control" name="nama" value="{{$item['nama']}}">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Alamat BUMDes</label>
-                                                    <input type="text" class="form-control" name="alamat"
-                                                        @if (count($bumdes) > 0) value="{{ $bumdes['alamat'] }}" @endif
-                                                        placeholder="Lokasi atau Alamat BUMDes">
+                                                    <input type="text" class="form-control" name="alamat" value="{{$item['alamat']}}">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Nomor Telepon Ketua BUMDes</label>
-                                                    <input type="text" class="form-control" name="no_ketua"
-                                                        @if (count($bumdes) > 0) value="{{ $bumdes['no_ketua'] }}" @endif
-                                                        placeholder="Nomor Telepon Ketua BUMDes">
+                                                    <input type="text" class="form-control" name="no_ketua" value="{{$ketua[0]->no_telp}}">
+                                                    <input type="hidden" class="form-control" name="id_ketua" value="{{$ketua[0]->id}}">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Nomor Telepon Bendahara
                                                         BUMDes</label>
-                                                    <input type="text" class="form-control" name="no_benda"
-                                                        @if (count($bumdes) > 0) value="{{ $bumdes['no_benda'] }}" @endif
-                                                        placeholder="Nomor Telepon Bendahara BUMDes">
+                                                    <input type="text" class="form-control" name="no_bendahara" value="{{$ketua[1]->no_telp}}">
+                                                    
+                                                    <input type="hidden" class="form-control" name="id_bendahara" value="{{$ketua[1]->id}}">
                                                 </div>
                                                 <div class="modal-footer">
-                                                    {{-- <button type="button" class="btn btn-default waves-effect m-l-5"
-                                                        data-dismiss="modal">Cancel</button> --}}
                                                     <button type="submit"
                                                         class="btn btn-primary waves-effect waves-light">Simpan Data
                                                         Profil</button>
                                                 </div>
+                                                @endforeach
                                             </form>
                                         </div>
                                     </div>
@@ -111,13 +106,13 @@
             <div class="row">
                 {{-- {{dd($Tab == "jasa")}} --}}
                 <ul class="nav nav-tabs navtab-bg nav-justified">
-                    <li class= {{$Tab == "jasa" ? "active" : "" }}>
+                    <li class= "">
                         <a href="#home1" data-toggle="tab" aria-expanded="false">
                             <span class="visible-xs"><i class="fa fa-shopping-basket"></i></span>
                             <span class="hidden-xs">Usaha Jasa</span>
                         </a>
                     </li>
-                    <li class= {{$Tab == "dagang" ? "active" : "" }}>
+                    <li class= "">
                         <a href="#profile1" data-toggle="tab" aria-expanded="true">
                             <span class="visible-xs"><i class="fa fa-group"></i></span>
                             <span class="hidden-xs">Usaha Dagang</span>
@@ -127,7 +122,7 @@
 
                 <!-- Tab Content -->
                 <div class="tab-content">
-                    <div class="tab-pane {{$Tab == "jasa" ? "active" : "" }}" id="home1">
+                    <div class="tab-pane" id="home1">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Data Usaha Jasa</h3>
@@ -154,42 +149,7 @@
 
 
                                             <tbody>
-                                                @foreach ($datajasa as $item)
-                                                    <tr>
-                                                        <td>
-                                                            <div class="conbtn">
-                                                                {{ $loop->index + 1 }}
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            {{ $item['namajasa'] }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $item['alamatjasa'] }}
-                                                        </td>
-                                                        <td>
-                                                            <ul>
-                                                                @foreach ($item['jenis'] as $isi)
-                                                                    <li>{{ $isi }}</li>
-                                                                @endforeach
-                                                            </ul>
-                                                        </td>
-                                                        <td>
-                                                            <div class="conbtn">
-                                                                <button class="btn btn-primary center fa fa-edit"
-                                                                    data-toggle="modal" data-target="#editjasa"
-                                                                    onclick="edit_datajasa('{{ $item['namajasa'] }}', '{{ $item['alamatjasa'] }}', {{ $loop->index }})"></button>
-                                                                <button class="btn btn-danger center fa fa-trash"
-                                                                    style="margin-left: 2%"></button>
-                                                                <button class="btn btn-success center fa fa-plus"
-                                                                    style="margin-left: 2%" data-toggle="modal"
-                                                                    data-target="#editjenis"
-                                                                    onclick='jenisdata({{ $loop->index }}, @JSON($item['jenis']))'>
-                                                                    Jenis Pendapatan</button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                                
 
                                             </tbody>
                                         </table>
@@ -199,7 +159,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane {{$Tab == "dagang" ? "active" : "" }}" id="profile1">
+                    <div class="tab-pane" id="profile1">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Data Usaha Dagang</h3>
@@ -224,30 +184,7 @@
                                             </thead>
 
                                             <tbody>
-                                                @foreach ($datadagang as $item)
-                                                    <tr>
-                                                        <td>
-                                                            <div class="conbtn">
-                                                                {{ $loop->index + 1 }}
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            {{ $item['namadagang'] }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $item['alamatdagang'] }}
-                                                        </td>
-                                                        <td>
-                                                            <div class="conbtn">
-                                                                <button class="btn btn-primary center fa fa-edit"
-                                                                    data-toggle="modal" data-target="#editdagang" onclick="edit_datadagang('{{ $item['namadagang'] }}', '{{ $item['alamatdagang'] }}', {{ $loop->index }})"></button>
-                                                                <button class="btn btn-danger center fa fa-trash"
-                                                                    style="margin-left: 2%"></button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-
+                                               
                                             </tbody>
                                         </table>
                                     </div>
@@ -275,7 +212,7 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Data Usaha</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form" action="{{ route('post.profilbumdes') }}"
+                    <form class="form-horizontal" role="form" action=""
                         method="post">
                         @csrf
                         <input type="hidden" name="jenis" value=1> {{-- lempar jenis --}}
@@ -317,7 +254,7 @@
                     <h4 class="modal-title" id="myModalLabel">Edit Data Usaha</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form" action="{{ route('post.editdatausaha') }}"
+                    <form class="form-horizontal" role="form" action=""
                         method="post">
                         @csrf
                         <input type="hidden" name="jenis" value=1> {{-- lempar jenis --}}
@@ -360,7 +297,7 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Data Usaha</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form" action="{{ route('post.profilbumdes') }}"
+                    <form class="form-horizontal" role="form" action=""
                         method="post">
                         @csrf
                         <input type="hidden" name="jenis" value=2>
@@ -402,7 +339,7 @@
                     <h4 class="modal-title" id="myModalLabel">Edit Data Usaha</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form" action="{{ route('post.editdatausaha') }}"
+                    <form class="form-horizontal" role="form" action=""
                         method="post">
                         @csrf
                         <input type="hidden" name="jenis" value=2> {{-- lempar jenis --}}
@@ -445,7 +382,7 @@
                         <h4 class="modal-title" id="myModalLabel">Pilih Foto/Gambar</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('post.profilbumdes') }}" method="POST" class="form-horizontal" role="form"
+                        <form action="" method="POST" class="form-horizontal" role="form"
                             enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="jenis" value=3>
@@ -481,7 +418,7 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" role="form" style="margin-left: 5px;" method="post"
-                        action="{{ route('post.jenisdatausaha') }}">
+                        action="">
                         @csrf
 
                         <input type="hidden" id="isidata" name="id">

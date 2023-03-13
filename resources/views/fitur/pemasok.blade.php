@@ -1,6 +1,8 @@
 @extends('app')
 
+
 @section('content')
+
     <div class="content">
         <div class="container">
 
@@ -15,9 +17,19 @@
                     <div class="clearfix"></div>
                 </div>
             </div>
+            @if(session()->has('success'))
+    {{session('success')}}
+        @endif
+        {{-- @error('nama')
+        {{$message}}
+        @enderror
+        @error('kontak')
+        {{$message}}
+        @enderror
+        @error('alamat')
+        {{$message}}
+        @enderror --}}
         </div>
-
-
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-primary">
@@ -45,8 +57,50 @@
                                         </thead>
 
 
-                                        <tbody>
-                                            
+                                        {{-- <tbody>
+                                            @foreach ($data as $pemasok )
+                                            <p>{{$pemasok}}</p>
+                                            @endforeach --}}
+                                            @foreach ($data as $item)
+                                                <tr>
+                                                    <td>
+                                                        <div class="conbtn">
+                                                            {{ $loop->iteration }}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        {{$item->nama}}
+                                                        {{-- {{ $data == null ? 'kosong' : $item['nama'] }} --}}
+                                                    </td>
+                                                    <td>
+                                                        {{$item->kontak}}
+                                                        {{-- {{ $item == null ? 'kosong' : $item['kontak'] }} --}}
+                                                    </td>
+                                                    <td>
+                                                        {{$item->alamat}}
+                                                        {{-- {{ $data == null ? 'kosong' : $item['alamat'] }} --}}
+                                                    </td>
+                                                    <td>
+
+                                                         <div class="conbtn">
+                                                            <button class="btn btn-primary center fa fa-edit"
+                                                                data-toggle="modal" data-target="#edit"
+                                                                onclick="edit_data('{{ $item->nama }}', '{{ $item->kontak}}', '{{ $item->alamat}}', '/pemasok/{{$item->id}}')"></button>
+                                                                <form method="POST" action="/pemasok/{{$item->id}}" class="form-horizontal" role="form">
+                                                                   @method('delete')
+                                                                    @csrf
+
+                                                                    <button class="btn btn-danger center fa fa-trash"
+                                                                style="margin-left: 2%"></button>
+                                                                </form>
+                                                            <button class="btn btn-success center mdi mdi-eye"
+                                                                style="margin-left: 2%"
+                                                                onclick="window.location.href='/pemasok/show/{{ $item->id }}'">
+                                                                Barang</button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
 
@@ -72,12 +126,12 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Data Pemasok</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST" class="form-horizontal" role="form">
+                    <form method="POST" action="{{ route('post.pemasok') }}" class="form-horizontal" role="form">
                         @csrf
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nama Pemasok</label>
                             <div class="col-md-8">
-                                <input name="nama" type="text" class="form-control"
+                                <input name="nama" type="text" class="form-control" id="nama"
                                     placeholder="Nama Pemasok atau Nama Perusahaannya" required>
                             </div>
                         </div>
@@ -85,7 +139,7 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nomor Telepon</label>
                             <div class="col-md-8">
-                                <input name="nohp" data-parsley-type="number" type="text" class="form-control"
+                                <input name="kontak" data-parsley-type="number" type="text" class="form-control" id="kontak"
                                     placeholder="08XXXXXXXXXX" required />
                             </div>
                         </div>
@@ -93,7 +147,7 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Alamat Pemasok</label>
                             <div class="col-md-8">
-                                <input name="alamat" type="text" class="form-control"
+                                <input name="alamat" type="text" class="form-control" id="alamat"
                                     placeholder="Alamat Pemasok atau Alamat Perusahaannya" required>
                             </div>
                         </div>
@@ -122,13 +176,14 @@
                 <div class="modal-body">
 
                     <form action="" method="POST" class="form-horizontal"
-                        role="form">
+                        role="form" id="form_update">
+                        @method('put')
                         @csrf
-                        <input type="hidden" name="id" id="id_p">
+                        {{-- <input type="hidden" name="id" id="id_p"> --}}
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nama Pemasok</label>
                             <div class="col-md-8">
-                                <input name="nama" type="text" class="form-control" id="nama"
+                                <input name="nama" id="edit_nama" type="text" class="form-control"
                                     placeholder="Nama Pemasok atau Nama Perusahaannya" required>
                             </div>
                         </div>
@@ -136,15 +191,15 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nomor Telepon</label>
                             <div class="col-md-8">
-                                <input name="nohp" data-parsley-type="number" type="text" class="form-control"
-                                id="nohp" placeholder="08XXXXXXXXXX" required />
+                                <input name="kontak" id="edit_kontak" data-parsley-type="number" type="text" class="form-control"
+                                placeholder="08XXXXXXXXXX" required />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-4 control-label">Alamat Pemasok</label>
                             <div class="col-md-8">
-                                <input name="alamat" type="text" class="form-control" id="alamat"
+                                <input name="alamat" id="edit_alamat" type="text" class="form-control" id="alamat"
                                     placeholder="Alamat Pemasok atau Alamat Perusahaannya" required>
                             </div>
                         </div>
@@ -166,12 +221,12 @@
 
 @section('script')
     <script>
-        function edit_data(nama, nohp, alamat, id) {
-            console.log('editdata: ' + id);
-            document.getElementById("id_p").value = id;
-            document.getElementById("nama").value = nama;
-            document.getElementById("nohp").value = nohp;
-            document.getElementById("alamat").value = alamat;
+        function edit_data(nama, kontak, alamat, url) {
+            // console.log(nama, kontak, alamat, url);
+            document.getElementById("form_update").action = url;
+            document.getElementById("edit_nama").value = nama;
+            document.getElementById("edit_kontak").value = kontak;
+            document.getElementById("edit_alamat").value = alamat;
         }
     </script>
 @endsection

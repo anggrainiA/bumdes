@@ -32,20 +32,24 @@ Route::get('/Dashboard',  [DashboardController::class, 'index'])->name('dashboar
 Route::group(['prefix' => 'Master Data', 'middleware' => ['auth','Role:Ketua,Bendahara'] ],function () {
     Route::get('/Pengelola',  [PengelolaController::class, 'index'])->name('pengelola');
     Route::get('/Data Akun',  [DataAkunController::class, 'index'])->name('dataakun');
-}); 
+});
 Route::group(['prefix' => 'Master Data', 'middleware' => ['auth','Role:Ketua' ]], function () {
-    Route::get('/Pemasok',  [PemasokController::class, 'index'])->name('pemasok');
+    Route::get('/pemasok', [PemasokController::class, 'pemasok'])->name('pemasok');
+    Route::post('/pemasok', [PemasokController::class, 'store'])->name('post.pemasok');
+    Route::get('/pemasok/show/{id}', [PemasokController::class, 'show']);
+    Route::put('/pemasok/{pemasok}', [PemasokController::Class, 'update']);
+    Route::delete('/pemasok/{pemasok}', [PemasokController::Class, 'destroy']);
     Route::get('/Pelanggan',  [PelangganController::class, 'index'])->name('pelanggan');
     Route::get('/Data Hutang',  [DataHutangController::class, 'index'])->name('datahutang');
     // profil
     Route::get('/ProfilBumdes',  [ProfilBumdesController::class, 'index'])->name('profilbumdes');
     Route::post('/ProfilBumdes/Update',  [ProfilBumdesController::class, 'update'])->name('updateprofilbumdes');
-    
+
     //insert
     Route::post('/Pengelola/Tambah',  [PengelolaController::class, 'tambah'])->name('tambahPengelola');
     Route::post('/Pengelola/Edit',  [PengelolaController::class, 'edit'])->name('editpengelola');
     Route::post('/Pengelola/Delete/{id}',  [PengelolaController::class, 'delete'])->name('deletePengelola');
-}); 
+});
 
     // Route::middleware(['Role:Bendahara'])->group(function () {
 // Route::get('/Pengelola',  [PengelolaController::class, 'index'])->name('pengelola')->middleware('Role:Bendahara');

@@ -57,7 +57,6 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <!-- <a href="#"> Klikit</a> -->
                                                         {{ $data == null ? 'kosong' : $item['nama'] }}
                                                     </td>
                                                     <td>
@@ -83,9 +82,6 @@
                                                      <a href="#" class="delete" data-id="{{$item['id']}}"></button></a>
                                                    <form id="#delete-post-form "action="{{route('deletePengelola',['id'=>$item['id']])}}" method="post">
                                                     @csrf
-                                                    <!-- @method('DELETE') -->
-                                                        <!-- <button onclick="return false" id="delete-user" class="btn btn-danger">Delete</button> -->
-                                                        <!-- <input type="hidden" name="id" id="id_p" valye="{{$item['id']}}"> -->
                                                         <button class="btn btn-danger center fa fa-trash delete-user" 
                                                         style="margin-left: 2%">
                                                     </form>

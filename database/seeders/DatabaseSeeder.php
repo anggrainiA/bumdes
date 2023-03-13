@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 use App\Models\Pengelola;
-use App\Models\Pelanggan;
+use App\Models\ProfilBumdes;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Crypt;
+use Illuminate\Support\Str;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -17,21 +17,29 @@ class DatabaseSeeder extends Seeder
     {
         Pengelola::create([
             'nama'=>'bayu',
-            'id'=>'test1',
+            'id'=>Str::random(30),
             'status'=>'Ketua',
             'no_telp'=>'414123',
             'alamat'=>'w',
             'foto'=>'w',
             'password'=>Hash::make('user1234'),
         ]);
-
-        Pelanggan::create([
-            'nama'=>'Semeton',
-            'kontak'=>'08',
+        Pengelola::create([
+            'nama'=>'anggi',
+            'id'=>Str::random(30),
+            'status'=>'Bendahara',
+            'no_telp'=>'11111',
             'alamat'=>'w',
-
+            'foto'=>'w',
+            'password'=>Hash::make('user1234'),
         ]);
-
-
+        profilbumdes::create([
+            'id'=>Str::random(30),
+            'nama'=>'bayu',
+            'alamat'=>'w',
+            'foto'=>'w',
+        ]);
+         
+    
     }
 }

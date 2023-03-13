@@ -15,7 +15,7 @@
                     @if(Auth::user()->status=='Ketua')
                     <h5><a href="{{route('profilbumdes')}}" class="text-white">BUMDes Kuta Mandalika</a></h5>
                     @else
-                    <h5><p href="#" class="text-white">BUMDes Kuta Mandalika</p></h5>
+                    <h5><p class="text-white">BUMDes Kuta Mandalika</p></h5>
                     <!--  -->
                     @endif
                 </div>

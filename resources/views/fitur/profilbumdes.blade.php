@@ -36,8 +36,9 @@
                                     <div class="conbtn">
                                         <div class="mx-auto text-center">
                                             <form style="padding-right: 25px" >
-                                                <img class="img-circle rounded-circle m-b-5"alt="">
-                                                  
+                                                @foreach ($data as $item)
+                                                <img class="img-circle rounded-circle m-b-5"alt="" src="/images/upload/{{$item['foto']}}">
+                                                @endforeach
                                                 <p id="file-name"><br></p>
                                                 
                                                 <div class="modal-footer m-t-8">
@@ -382,7 +383,7 @@
                         <h4 class="modal-title" id="myModalLabel">Pilih Foto/Gambar</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="" method="POST" class="form-horizontal" role="form"
+                        <form action="{{route('updategambarprofilbumdes', ['id'=>$item['id']])}}" method="POST" class="form-horizontal" role="form"
                             enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="jenis" value=3>

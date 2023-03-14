@@ -9,6 +9,8 @@ use App\Http\Controllers\DataHutangController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PemasokController;
 use App\Http\Controllers\ProfilBumdesController;
+use App\Http\Controllers\ProfilPengelolaController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,12 +29,16 @@ Route::post('/logout',  [LoginController::class, 'logout'])->name('logout')->mid
 
 
 Route::get('/Dashboard',  [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+Route::get('/profilPengelola',  [ProfilPengelolaController::class, 'index'])->name('profilpengelola')->middleware('auth');
+Route::post('/profilPengelola/update',  [ProfilPengelolaController::class, 'update'])->name('updateprofilpengelola')->middleware('auth');
+Route::post('/profilPengelola/UpdateProfil',  [ProfilPengelolaController::class, 'updateGambar'])->name('updateGambarProfil')->middleware('auth');
+
 // Route::get('/Profil',  [ProfilController::class, 'index'])->name('dashboard')->middleware('auth');
 
 Route::group(['prefix' => 'Master Data', 'middleware' => ['auth','Role:Ketua,Bendahara'] ],function () {
     Route::get('/Pengelola',  [PengelolaController::class, 'index'])->name('pengelola');
     Route::get('/Data Akun',  [DataAkunController::class, 'index'])->name('dataakun');
-}); 
+});
 Route::group(['prefix' => 'Master Data', 'middleware' => ['auth','Role:Ketua' ]], function () {
     Route::get('/Pemasok',  [PemasokController::class, 'index'])->name('pemasok');
     Route::get('/Pelanggan',  [PelangganController::class, 'index'])->name('pelanggan');
@@ -40,12 +46,12 @@ Route::group(['prefix' => 'Master Data', 'middleware' => ['auth','Role:Ketua' ]]
     // profil
     Route::get('/ProfilBumdes',  [ProfilBumdesController::class, 'index'])->name('profilbumdes');
     Route::post('/ProfilBumdes/Update',  [ProfilBumdesController::class, 'update'])->name('updateprofilbumdes');
-    
+
     //insert
     Route::post('/Pengelola/Tambah',  [PengelolaController::class, 'tambah'])->name('tambahPengelola');
     Route::post('/Pengelola/Edit',  [PengelolaController::class, 'edit'])->name('editpengelola');
     Route::post('/Pengelola/Delete/{id}',  [PengelolaController::class, 'delete'])->name('deletePengelola');
-}); 
+});
 
     // Route::middleware(['Role:Bendahara'])->group(function () {
 // Route::get('/Pengelola',  [PengelolaController::class, 'index'])->name('pengelola')->middleware('Role:Bendahara');

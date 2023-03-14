@@ -1,5 +1,4 @@
-<?php $foto = Session::get('user') == null ? 'profil_holder.png' : Session::get('user')['file']; ?>
-<!-- Top Bar Start -->
+
 <div class="topbar">
     <!-- LOGO -->
     <div class="topbar-left">
@@ -66,9 +65,11 @@
                         </ul>
                     </li>
                     <li class="dropdown">
+    
                         <a href="" class="dropdown-toggle profile waves-effect waves-light"
-                            data-toggle="dropdown" aria-expanded="true"><img src={{ asset('images/' . $foto) }}
+                            data-toggle="dropdown" aria-expanded="true"><img src="/images/upload/{{Auth::user()->foto}}"
                                 alt="user-img" class="img-circle" /></a>
+                        
                         <ul class="dropdown-menu">
                             <li><a href="{{ route('profilpengelola') }}" class="dropdown-item"> Profile</a></li>
                             <li class="divider"></li>

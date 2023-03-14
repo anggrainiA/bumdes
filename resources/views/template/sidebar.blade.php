@@ -1,13 +1,12 @@
-<!-- ========== Left Sidebar Start ========== -->
-<?php $foto = Session::get('bumdes') == null ? 'defaultbumdes.png' : Session::get('bumdes')['file'];  ?>
-<!-- diganti -->
-<!--  -->
+
 
 <div class="left side-menu">
     <div class="sidebar-inner slimscrollleft">
         <div class="user-details">
             <div class="text-center">
-                <a href=""></a><img src={{ asset("images/".$foto) }} alt="" class="img-circle"></a>
+                @foreach($profilbumdes as $item)
+                <a href=""></a><img src="/images/upload/{{$item['foto']}}" alt="" class="img-circle"></a>
+                @endforeach
             </div>
             <div class="user-info">
                 <div class="dropdown m-t-5">

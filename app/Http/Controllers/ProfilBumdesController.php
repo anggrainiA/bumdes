@@ -21,6 +21,7 @@ class ProfilBumdesController extends Controller
         ]);
         $noK=$request->no_ketua;
         $noB=$request->no_bendahara;
+
         ProfilBumdes::where('id',$request->id)->update([
             'nama'=> $request->nama,
             'alamat'=> $request->alamat ]);
@@ -30,6 +31,7 @@ class ProfilBumdesController extends Controller
         Pengelola::where('id', $request->id_bendahara)->update([
             'no_telp'=> $request->no_bendahara
         ]);
+        
         return back();
     }
     public function updateGambar(Request $request, $id){

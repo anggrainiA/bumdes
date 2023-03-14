@@ -19,7 +19,7 @@
                     <!--  -->
                     @endif
                 </div>
-            
+
                 {{-- <p class="text-muted m-0"><i class="fa fa-dot-circle-o text-success"></i> Online</p> --}}
             </div>
         </div>

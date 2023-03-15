@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             'alamat'=>'w',
             'foto'=>'w',
         ]);
-         
-    
+
+
     }
 }

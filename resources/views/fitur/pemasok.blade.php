@@ -61,7 +61,7 @@
                                             @foreach ($data as $pemasok )
                                             <p>{{$pemasok}}</p>
                                             @endforeach --}}
-                                            @foreach ($data as $item)
+                                            @foreach ($pemasok as $item)
                                                 <tr>
                                                     <td>
                                                         <div class="conbtn">
@@ -86,9 +86,10 @@
                                                             <button class="btn btn-primary center fa fa-edit"
                                                                 data-toggle="modal" data-target="#edit"
                                                                 onclick="edit_data('{{ $item->nama }}', '{{ $item->kontak}}', '{{ $item->alamat}}', '/pemasok/{{$item->id}}')"></button>
-                                                                <form method="POST" action="/pemasok/{{$item->id}}" class="form-horizontal" role="form">
-                                                                   @method('delete')
+                                                                <form method="POST" action= "{{route('post.edit')}}" class="form-horizontal" role="form">
+                                                                   {{-- @method('delete') --}}
                                                                     @csrf
+                                                                    {{-- "/pemasok/{{$item->id}} --}}
 
                                                                     <button class="btn btn-danger center fa fa-trash"
                                                                 style="margin-left: 2%"></button>

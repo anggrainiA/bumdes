@@ -33,18 +33,13 @@
                                     <div class="conbtn">
                                         <div class="mx-auto text-center">
                                             <form style="padding-right: 25px">
-                                                <img class="rounded-circle m-b-5"
-                                                    @if (count($bumdes) > 0) src="{{ asset('images/' . $bumdes['file']) }}"
-                                                    @else src="{{ asset('images/profil_holder.png') }}" @endif
-                                                    alt="">
+                                                <img class="rounded-circle m-b-5" alt=""
+                                                    src="/images/upload/{{ Auth::user()->foto }}">
                                                 <p id="file-name"><br></p>
                                                 <div class="modal-footer m-t-8">
                                                     <div class="mx-auto text-right">
 
-                                                        {{-- <input type="file" name="file"
-                                                            onchange="document.getElementById('file-name').innerHTML = this.files[0].name"
-                                                            style="display: none"> --}}
-                                                        {{-- <button class="btn btn-primary waves-effect waves-light" onclick="diklik()">Pilih gambar</button> --}}
+
                                                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                                             data-target="#foto">Ubah Foto</button>
                                                     </div>
@@ -59,32 +54,31 @@
 
                                         <div class="mx-auto text-left">
                                             <form style="padding-right: 25px" method="POST"
-                                                action="{{ route('post.profiluser') }}">
+                                                action=" {{ route('updateprofilpengelola') }}">
                                                 @csrf
                                                 <input type="hidden" name="jenis" value=4>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Nama Pengguna</label>
                                                     <input type="text" class="form-control" name="nama"
-                                                        @if (count($bumdes) > 0) value="{{ $bumdes['nama'] }}" @endif
-                                                        placeholder="Nama Lengkap Anda">
+                                                        placeholder="Nama Lengkap Anda" value="{{ @Auth::user()->nama }}">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Alamat Pengguna</label>
                                                     <input type="text" class="form-control" name="alamat"
-                                                        @if (count($bumdes) > 0) value="{{ $bumdes['alamat'] }}" @endif
-                                                        placeholder="Alamat atau Tempat Tinggal Anda">
+                                                        placeholder="Alamat atau Tempat Tinggal Anda"
+                                                        value="{{ @Auth::user()->alamat }}">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Nomor Telepon Pengguna</label>
-                                                    <input type="text" class="form-control" name="no_ketua"
-                                                        @if (count($bumdes) > 0) value="{{ $bumdes['no_ketua'] }}" @endif
-                                                        placeholder="Nomor Telepon Anda">
+                                                    <input type="text" class="form-control" name="no_telp"
+                                                        placeholder="Nomor Telepon Anda"
+                                                        value="{{ @Auth::user()->no_telp }}">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Status Pengguna</label>
-                                                    <input type="text" disabled="disabled" class="form-control" name="no_benda"
-                                                        @if (count($bumdes) > 0) value="Pencatat Transaksi" @endif
-                                                        placeholder="Pencatat Transaksi">
+                                                    <input type="text" disabled="disabled" class="form-control"
+                                                        name="no_benda" placeholder="Pencatat Transaksi"
+                                                        value="{{ @Auth::user()->status }}">
                                                 </div>
                                                 <div class="modal-footer">
                                                     {{-- <button type="button" class="btn btn-default waves-effect m-l-5"
@@ -103,7 +97,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
 
     </div> <!-- container -->
@@ -114,8 +108,7 @@
 
 
     <!-- sample modal edit foto -->
-    <div id="foto" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
+    <div id="foto" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -123,15 +116,15 @@
                     <h4 class="modal-title" id="myModalLabel">Pilih Foto Profil</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('post.profiluser') }}" method="POST" class="form-horizontal"
-                        role="form" enctype="multipart/form-data">
+                    <form action="{{ route('updateGambarProfil') }}" method="POST" class="form-horizontal" role="form"
+                        enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="jenis" value=3>
                         <div class="form-group">
                             <label class="col-md-4 control-label">Foto</label>
                             <div class="col-md-8">
                                 <input class="form-control" name="file" type="file" id="file"
-                                onchange="validateFile()" required />
+                                    onchange="validateFile()" required />
                             </div>
                         </div>
 

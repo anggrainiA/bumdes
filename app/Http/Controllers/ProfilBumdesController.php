@@ -21,6 +21,7 @@ class ProfilBumdesController extends Controller
         ]);
         $noK=$request->no_ketua;
         $noB=$request->no_bendahara;
+
         ProfilBumdes::where('id',$request->id)->update([
             'nama'=> $request->nama,
             'alamat'=> $request->alamat ]);
@@ -30,18 +31,21 @@ class ProfilBumdesController extends Controller
         Pengelola::where('id', $request->id_bendahara)->update([
             'no_telp'=> $request->no_bendahara
         ]);
+        
         return back();
     }
-    public function updateGambar(Request $request){
-
-     $employee = ProfilBumdes::find($id);
+    public function updateGambar(Request $request, $id){
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        $bumdes = ProfilBumdes::find($id);
 
      if($request->file != ''){        
-          $path = public_path().'/uploads/images/';
+          $path = public_path().'/images/upload/';
 
           //code for remove old file
-          if($employee->file != ''  && $employee->file != null){
-               $file_old = $path.$employee->file;
+          if($bumdes->file != ''  && $bumdes->file != null){
+               $file_old = $path.$bumdes->file;
                unlink($file_old);
           }
 
@@ -51,7 +55,8 @@ class ProfilBumdesController extends Controller
           $file->move($path, $filename);
 
           //for update in table
-          $employee->update(['file' => $filename]);
+          $bumdes->update(['foto' => $filename]);
+          return back();
      }
 }
 }

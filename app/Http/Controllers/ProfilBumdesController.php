@@ -3,14 +3,19 @@
 namespace App\Http\Controllers;
 use App\Models\ProfilBumdes;
 use App\Models\Pengelola;
+use App\Models\UsahaJasaModel;
+use App\Models\JenisPendapatan;
 use Illuminate\Http\Request;
+use DB;
 
 class ProfilBumdesController extends Controller
 {
     public function index(){
         $data=ProfilBumdes::all();
         $ketua=Pengelola::where('status', 'Ketua')->orWhere('status','Bendahara')->get();
-        return view('fitur.profilbumdes',compact('data','ketua'));
+        $jasa2=UsahaJasaModel::join('jenispendapatan', 'jenispendapatan.idjasa', '=', 'usahajasa.id')->get(['jenispendapatan.namajenispendapatan']);
+        $jasa1=UsahaJasaModel::All();
+        return view('fitur.profilbumdes',compact('data','ketua','jasa2','jasa1'));
     }
     public function update(Request $request){
         $request->validate([
@@ -19,6 +24,7 @@ class ProfilBumdesController extends Controller
             'no_ketua' => ['required'],
             'no_bendahara' => ['required'],
         ]);
+
         $noK=$request->no_ketua;
         $noB=$request->no_bendahara;
 
@@ -42,7 +48,6 @@ class ProfilBumdesController extends Controller
 
      if($request->file != ''){        
           $path = public_path().'/images/upload/';
-
           //code for remove old file
           if($bumdes->file != ''  && $bumdes->file != null){
                $file_old = $path.$bumdes->file;

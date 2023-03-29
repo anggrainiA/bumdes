@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 use App\Models\Pengelola;
 use App\Models\ProfilBumdes;
+use App\Models\Pelanggan;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -33,13 +34,25 @@ class DatabaseSeeder extends Seeder
             'foto'=>'w',
             'password'=>Hash::make('user1234'),
         ]);
+        Pengelola::create([
+            'nama'=>'anggi1',
+            'id'=>Str::random(30),
+            'status'=>'Accounting',
+            'no_telp'=>'11111',
+            'alamat'=>'w',
+            'foto'=>'w',
+            'password'=>Hash::make('user1234'),
+        ]);
         profilbumdes::create([
             'id'=>Str::random(30),
             'nama'=>'bayu',
             'alamat'=>'w',
             'foto'=>'w',
         ]);
-
-
+        Pelanggan::create([
+            'nama'=>'Default',
+            'kontak'=>'00',
+            'alamat'=>'00',
+        ]);
     }
 }

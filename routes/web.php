@@ -10,6 +10,9 @@ use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PemasokController;
 use App\Http\Controllers\ProfilBumdesController;
 use App\Http\Controllers\ProfilPengelolaController;
+use App\Http\Controllers\UsahaJasaController;
+use App\Http\Controllers\JenisPendapatanController;
+use App\Http\Controllers\TransaksiJasaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +36,6 @@ Route::get('/profilPengelola',  [ProfilPengelolaController::class, 'index'])->na
 Route::post('/profilPengelola/update',  [ProfilPengelolaController::class, 'update'])->name('updateprofilpengelola')->middleware('auth');
 Route::post('/profilPengelola/UpdateProfil',  [ProfilPengelolaController::class, 'updateGambar'])->name('updateGambarProfil')->middleware('auth');
 
-// Route::get('/Profil',  [ProfilController::class, 'index'])->name('dashboard')->middleware('auth');
 
 Route::group(['prefix' => 'Master Data', 'middleware' => ['auth','Role:Ketua,Bendahara'] ],function () {
     Route::get('/Pengelola',  [PengelolaController::class, 'index'])->name('pengelola');
@@ -47,20 +49,27 @@ Route::group(['prefix' => 'Master Data', 'middleware' => ['auth','Role:Ketua' ]]
     Route::put('/pemasok', [PemasokController::Class, 'update'])->name('post.edit');
     Route::delete('/pemasok/{pemasok}', [PemasokController::Class, 'destroy']);
 
-
+    
     Route::get('/Pelanggan',  [PelangganController::class, 'index'])->name('pelanggan');
     Route::get('/Data Hutang',  [DataHutangController::class, 'index'])->name('datahutang');
-    // profil
+    // profil bumdes
     Route::get('/ProfilBumdes',  [ProfilBumdesController::class, 'index'])->name('profilbumdes');
     Route::post('/ProfilBumdes/Update',  [ProfilBumdesController::class, 'update'])->name('updateprofilbumdes');
     Route::post('/ProfilBumdes/UpdateGambar/{id}',  [ProfilBumdesController::class, 'updateGambar'])->name('updategambarprofilbumdes');
-
+        //usaha jasa di profil bumdes
+        Route::post('/ProfilBumdes/TambahUsahaJasa',  [UsahaJasaController::class, 'tambahusahajasa'])->name('usahajasatambah');
+        Route::post('/ProfilBumdes/TambahJenisPendapatan/{id}',  [JenisPendapatanController::class, 'tambah'])->name('jenispendapatantambah');
+        Route::post('/ProfilBumdes/DeleteJenisPendapatan/{id}',  [JenisPendapatanController::class, 'delete'])->name('jenispendapatandelete');
     //insert
     Route::post('/Pengelola/Tambah',  [PengelolaController::class, 'tambah'])->name('tambahPengelola');
     Route::post('/Pengelola/Edit',  [PengelolaController::class, 'edit'])->name('editpengelola');
     Route::post('/Pengelola/Delete/{id}',  [PengelolaController::class, 'delete'])->name('deletePengelola');
 });
+Route::group(['prefix' => 'Jasa', 'middleware' => ['auth','Role:Accounting'] ],function () {
 
-    // Route::middleware(['Role:Bendahara'])->group(function () {
-// Route::get('/Pengelola',  [PengelolaController::class, 'index'])->name('pengelola')->middleware('Role:Bendahara');
-    // });
+    Route::get('/Transaksi Jasa',  [TransaksiJasaController::class, 'index'])->name('transaksijasa');
+    Route::post('/Transaksi Jasa/Tambah',  [TransaksiJasaController::class, 'tambah'])->name('transaksijasatambah');
+    Route::post('/Transaksi Jasa/UpdateGambar',  [TransaksiJasaController::class, 'updateGambar'])->name('updategambartransaksi');
+    Route::post('/Transaksi Jasa/UpdateTransaksi',  [TransaksiJasaController::class, 'updateTransaksi'])->name('edittransaksi');
+    // Route::get('/Data Akun',  [DataAkunController::class, 'index'])->name('dataakun');
+});

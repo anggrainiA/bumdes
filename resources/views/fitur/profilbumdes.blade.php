@@ -36,8 +36,8 @@
                                     <div class="conbtn">
                                         <div class="mx-auto text-center">
                                             <form style="padding-right: 25px" >
-                                                @foreach ($data as $item)
-                                                <img class="img-circle rounded-circle m-b-5"alt="" src="/images/upload/{{$item['foto']}}">
+                                                @foreach ($data as $gambar)
+                                                <img class="img-circle rounded-circle m-b-5"alt="" src="/images/upload/{{$gambar['foto']}}">
                                                 @endforeach
                                                 <p id="file-name"><br></p>
                                                 
@@ -147,12 +147,55 @@
                                                     <th style="text-align: center;">Aksi</th>
                                                 </tr>
                                             </thead>
-
-
                                             <tbody>
-                                                
-
-                                            </tbody>
+                                                @foreach ($jasa1 as $js)
+                                                    <tr>
+                                                        <td>
+                                                            <div class="conbtn">
+                                                                {{ $loop->index + 1 }}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            {{ $js['namausaha'] }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $js['lokasiusaha'] }}
+                                                        </td>
+                                                        <td>
+                                                            @if($jasa2 !=null)
+                                                                @foreach($jasa2 as $j)
+                                                                <ul>
+                                                                    {{$j['namajenispendapatan']}}
+                                                                </ul>
+                                                                @endforeach
+                                                            @else
+                                                                <ul>
+                                                                
+                                                                </ul>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            <div class="conbtn">
+                                                                <button class="btn btn-primary center fa fa-edit"
+                                                                    data-toggle="modal" data-target="#editjasa"
+                                                                    onclick="edit_datajasa('{{ $item['namajasa'] }}', '{{ $item['alamatjasa'] }}', {{ $loop->index }})"></button>
+                                                                @foreach($jasa1 as $js)
+                                                                <form action="{{route('jenispendapatandelete',['id'=>$js['id']])}}" method="post">
+                                                                    @csrf    
+                                                                    <button class="btn btn-danger center fa fa-trash"
+                                                                        style="margin-left: 2%"></button>
+                                                                </form>
+                                                                @endforeach
+                                                                <button class="btn btn-success center fa fa-plus"
+                                                                    style="margin-left: 2%" data-toggle="modal"
+                                                                    data-target="#editjenis"
+                                                                    onclick='jenisdata({{ $loop->index }}, @JSON($item['jenis']))'>
+                                                                    Jenis Pendapatan</button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
                                         </table>
                                     </div>
 
@@ -213,7 +256,7 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Data Usaha</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form" action=""
+                    <form class="form-horizontal" role="form" action="{{route('usahajasatambah')}}"
                         method="post">
                         @csrf
                         <input type="hidden" name="jenis" value=1> {{-- lempar jenis --}}
@@ -383,7 +426,8 @@
                         <h4 class="modal-title" id="myModalLabel">Pilih Foto/Gambar</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="{{route('updategambarprofilbumdes', ['id'=>$item['id']])}}" method="POST" class="form-horizontal" role="form"
+                        @foreach ($data as $profil)
+                        <form action="{{route('updategambarprofilbumdes', ['id'=>$profil['id']])}}" method="POST" class="form-horizontal" role="form"
                             enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="jenis" value=3>
@@ -402,6 +446,7 @@
                             </div>
     
                         </form>
+                        @endforeach
                     </div>
     
                 </div><!-- /.modal-content -->
@@ -418,11 +463,11 @@
                     <h4 class="modal-title" id="myModalLabel">Jenis Pendapatan</h4>
                 </div>
                 <div class="modal-body">
+                    @foreach($jasa1 as $js)
                     <form class="form-horizontal" role="form" style="margin-left: 5px;" method="post"
-                        action="">
+                        action="{{route('jenispendapatantambah', ['id' => $js['id']])}}">
                         @csrf
-
-                        <input type="hidden" id="isidata" name="id">
+                        <!-- <input type="hidden" id="isidata" name="id" value="{{$item}}"> -->
                         <div class="form-group">
                             <label class="control-label m-l-10"
                                 style="display: flex; justify-content: left; align-items: left; margin-bottom: 5px;">Data
@@ -437,6 +482,7 @@
                             </div>
                         </div>
                     </form>
+                    @endforeach
                     <hr>
 
                     <div id="place_here">

@@ -45,7 +45,7 @@
                 <li class="has_sub">
                     <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-group"></i> <span> Jasa</span> <span class="pull-right"><i class="mdi mdi-plus"></i></span></a>
                     <ul class="list-unstyled">
-                        <li><a href="">Transaksi Jasa</a></li>
+                        <li><a href="{{route('transaksijasa')}}">Transaksi Jasa</a></li>
                         <li><a href="">Beban</a></li>
                     </ul>
                 </li>

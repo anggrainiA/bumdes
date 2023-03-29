@@ -9,7 +9,8 @@ class PemasokController extends Controller
 {
     public function pemasok()
 {
-    return view('fitur.pemasok', ['data' => Pemasok::latest()->get()]);
+    return view('fitur.pemasok', ['pemasok' => Pemasok::latest()->get()]);
+    // return view('fitur.pemasok', ['pemasok' => Pemasok::all()]);
 }
     public function store(Request $request)
 {

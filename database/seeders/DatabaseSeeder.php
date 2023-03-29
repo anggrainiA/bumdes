@@ -54,7 +54,5 @@ class DatabaseSeeder extends Seeder
             'kontak'=>'00',
             'alamat'=>'00',
         ]);
-         
-    
     }
 }

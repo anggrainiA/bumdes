@@ -29,7 +29,7 @@ use App\Http\Controllers\TransaksiJasaController;
 Route::get('/',  [LoginController::class, 'index'])->name('login');
 Route::post('/login',  [LoginController::class, 'login'])->name('authenticate');
 Route::post('/logout',  [LoginController::class, 'logout'])->name('logout')->middleware('auth');
-
+Route::resource('/pelanggan', PelangganController::class,)->except(['create', 'edit', 'show']);
 
 Route::get('/Dashboard',  [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 Route::get('/profilPengelola',  [ProfilPengelolaController::class, 'index'])->name('profilpengelola')->middleware('auth');
@@ -46,7 +46,7 @@ Route::group(['prefix' => 'Master Data', 'middleware' => ['auth','Role:Ketua' ]]
     Route::get('/pemasok', [PemasokController::class, 'pemasok'])->name('pemasok');
     Route::post('/pemasok', [PemasokController::class, 'store'])->name('post.pemasok');
     Route::get('/pemasok/show/{id}', [PemasokController::class, 'show']);
-    Route::put('/pemasok/{pemasok}', [PemasokController::Class, 'update']);
+    Route::put('/pemasok', [PemasokController::Class, 'update'])->name('post.edit');
     Route::delete('/pemasok/{pemasok}', [PemasokController::Class, 'destroy']);
 
     

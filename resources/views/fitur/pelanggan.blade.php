@@ -43,10 +43,54 @@
                                                 <th style="text-align: center;">Aksi</th>
                                             </tr>
                                         </thead>
-
-
                                         <tbody>
+                                            @foreach ($pelanggan as $item)
+                                                <tr>
+                                                    <td>
+                                                        <div class="conbtn">
+                                                            {{ $loop->iteration }}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        {{$item->nama}}
+                                                        {{-- {{ $data == null ? 'kosong' : $item['nama'] }} --}}
+                                                    </td>
+                                                    <td>
+                                                        {{$item->kontak}}
+                                                        {{-- {{ $item == null ? 'kosong' : $item['kontak'] }} --}}
+                                                    </td>
+                                                    <td>
+                                                        {{$item->alamat}}
+                                                        {{-- {{ $data == null ? 'kosong' : $item['alamat'] }} --}}
+                                                    </td>
+                                                    <td>
+                                                        {{-- <div class="conbtn">
+                                                            <button class="btn btn-primary center fa fa-edit"
+                                                                data-toggle="modal" data-target="#edit"
+                                                                onclick="edit_data('{{ $item['nama'] }}', '{{ $item['kontak'] }}', '{{ $item['alamat'] }}', {{ $loop->index }})"></button>
+                                                            <button class="btn btn-danger center fa fa-trash"
+                                                                style="margin-left: 2%"></button>
+                                                            <button class="btn btn-success center mdi mdi-eye"
+                                                                style="margin-left: 2%"
+                                                                onclick="window.location.href='{{ route('get.detilpelanggan') }}?id={{ $loop->index }}'">
+                                                                Hutang</button>
+                                                        </div> --}}
 
+                                                        <div class="conbtn">
+                                                            <button class="btn btn-primary center fa fa-edit"
+                                                                data-toggle="modal" data-target="#edit"
+                                                                onclick="edit_data('{{ $item->nama }}', '{{ $item->kontak}}', '{{ $item->alamat}}', '/pelanggan/{{$item->id}}')"></button>
+                                                                <form method="POST" action="/pelanggan/{{$item->id}}" class="form-horizontal" role="form">
+                                                                   @method('delete')
+                                                                    @csrf
+
+                                                                    <button class="btn btn-danger center fa fa-trash"
+                                                                style="margin-left: 2%"></button>
+                                                                </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
 
@@ -72,7 +116,8 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Data Pelanggan</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form">
+                    <form method="POST" action="/pelanggan" class="form-horizontal" role="form">
+                        @csrf
 
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nama Pelanggan</label>
@@ -85,7 +130,7 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nomor Telepon</label>
                             <div class="col-md-8">
-                                <input name="nohp" data-parsley-type="number" type="text" class="form-control"
+                                <input name="kontak" data-parsley-type="number" type="text" class="form-control"
                                     placeholder="08XXXXXXXXXX" required />
                             </div>
                         </div>
@@ -121,14 +166,15 @@
                 </div>
                 <div class="modal-body">
 
-                    <form action="" method="POST" class="form-horizontal"
-                        role="form">
+                    <form action="/pelanggan" method="POST" class="form-horizontal"
+                        role="form" id='form_update'>
+                        @method('put')
                         @csrf
                         <input type="hidden" name="id" id="id_p">
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nama Pelanggan</label>
                             <div class="col-md-8">
-                                <input name="nama" type="text" class="form-control" id="nama"
+                                <input name="nama" type="text" class="form-control" id="edit_nama"
                                     placeholder="Nama Pelanggan atau Nama Perusahaannya" required>
                             </div>
                         </div>
@@ -136,15 +182,15 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nomor Telepon</label>
                             <div class="col-md-8">
-                                <input name="nohp" data-parsley-type="number" type="text" class="form-control"
-                                id="nohp" placeholder="08XXXXXXXXXX" required />
+                                <input name="kontak" data-parsley-type="number" type="text" class="form-control"
+                                id="edit_kontak" placeholder="08XXXXXXXXXX" required />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-4 control-label">Alamat Pelanggan</label>
                             <div class="col-md-8">
-                                <input name="alamat" type="text" class="form-control" id="alamat"
+                                <input name="alamat" type="text" class="form-control" id="edit_alamat"
                                     placeholder="Alamat Pelanggan atau Alamat Perusahaannya" required>
                             </div>
                         </div>
@@ -166,12 +212,12 @@
 
 @section('script')
     <script>
-        function edit_data(nama, nohp, alamat, id) {
-            console.log('editdata: ' + id);
-            document.getElementById("id_p").value = id;
-            document.getElementById("nama").value = nama;
-            document.getElementById("nohp").value = nohp;
-            document.getElementById("alamat").value = alamat;
+        function edit_data(nama, kontak, alamat, url) {
+            // console.log(nama, kontak, alamat, url);
+            document.getElementById("form_update").action = url;
+            document.getElementById("edit_nama").value = nama;
+            document.getElementById("edit_kontak").value = kontak;
+            document.getElementById("edit_alamat").value = alamat;
         }
     </script>
 @endsection

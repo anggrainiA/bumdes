@@ -101,7 +101,7 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> 
                 </div>
             </div>
             <div class="row">
@@ -162,34 +162,28 @@
                                                             {{ $js['lokasiusaha'] }}
                                                         </td>
                                                         <td>
-                                                            @if($jasa2 !=null)
-                                                                @foreach($jasa2 as $j)
-                                                                <ul>
-                                                                    {{$j['namajenispendapatan']}}
-                                                                </ul>
-                                                                @endforeach
-                                                            @else
-                                                                <ul>
+                                                            <ul>
+                                              
+                                                            </ul>
+                                                            
                                                                 
-                                                                </ul>
-                                                            @endif
                                                         </td>
                                                         <td>
                                                             <div class="conbtn">
                                                                 <button class="btn btn-primary center fa fa-edit"
                                                                     data-toggle="modal" data-target="#editjasa"
                                                                     onclick="edit_datajasa('{{ $item['namajasa'] }}', '{{ $item['alamatjasa'] }}', {{ $loop->index }})"></button>
-                                                                @foreach($jasa1 as $js)
-                                                                <form action="{{route('jenispendapatandelete',['id'=>$js['id']])}}" method="post">
+                                                           
+                                                                <form action="" method="post">
                                                                     @csrf    
                                                                     <button class="btn btn-danger center fa fa-trash"
                                                                         style="margin-left: 2%"></button>
                                                                 </form>
-                                                                @endforeach
                                                                 <button class="btn btn-success center fa fa-plus"
                                                                     style="margin-left: 2%" data-toggle="modal"
                                                                     data-target="#editjenis"
-                                                                    onclick='jenisdata({{ $loop->index }}, @JSON($item['jenis']))'>
+                                                                    id="{{$js['id']}}"
+                                                                    onclick="jenisdata()">
                                                                     Jenis Pendapatan</button>
                                                             </div>
                                                         </td>
@@ -463,10 +457,10 @@
                     <h4 class="modal-title" id="myModalLabel">Jenis Pendapatan</h4>
                 </div>
                 <div class="modal-body">
-                    @foreach($jasa1 as $js)
                     <form class="form-horizontal" role="form" style="margin-left: 5px;" method="post"
-                        action="{{route('jenispendapatantambah', ['id' => $js['id']])}}">
+                        action="{{route('jenispendapatantambah')}}">
                         @csrf
+                        <input type="hidden" name="id" id="id">
                         <!-- <input type="hidden" id="isidata" name="id" value="{{$item}}"> -->
                         <div class="form-group">
                             <label class="control-label m-l-10"
@@ -482,7 +476,6 @@
                             </div>
                         </div>
                     </form>
-                    @endforeach
                     <hr>
 
                     <div id="place_here">
@@ -507,24 +500,15 @@
             document.getElementsByName('file')[0].click()
         }
 
-        function jenisdata(id, jenis) {
+        function jenisdata() {
             // var id = $(this).data('ids');
             // console.log("aku "+id);
-            console.log(jenis);
-            $("#isidata").val(id);
-            var atas =
-                '<table id="datatable-responsive" class="table table-hover table-bordered dt-responsive nowrap"                        cellspacing="0" width="100%">                        <thead>                            <tr>                                <th style="text-align: center;">Edit Jenis Pendapatan</th>                                <th style="text-align: center;">Aksi</th>                            </tr>                        </thead>                        <tbody>';
-            var bawah = '</tbody>  </table>'
-            var isi = '';
-            jenis.forEach(element => {
-                isi = isi +
-                    '<form action="#">                                <tr>                                    <td>                                        <div class="">                                            <!-- <label class="control-label m-l-10" style="display: flex; justify-content: left; align-items: left; margin-bottom: 5px;">Data Jenis Pendapatan Baru</label> -->                                            <div class="">                                                <input name="jenis" type="text" class="form-control"                                                    placeholder="Contoh" value="' +
-                    element +
-                    '">                                            </div>                                        </div>                                    </td>                                    <td>                                        <div class="conbtn pt-3">                                        <button class="btn btn-danger center fa fa-trash"                                        style="padding: 7px;margin-left: 2%;"></button>                                    </div>                                    </td>                                </tr>                            </form>';
-            });
+            var id = event.target.id;
+            console.log(id);
+            
+         $(".modal-body #id").val( id );
+           
 
-
-            document.querySelector('#place_here').innerHTML = atas + isi + bawah;
         }
 
         function edit_datajasa(namajasa, alamatjasa, id) {

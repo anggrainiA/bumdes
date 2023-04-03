@@ -58,18 +58,21 @@ Route::group(['prefix' => 'Master Data', 'middleware' => ['auth','Role:Ketua' ]]
     Route::post('/ProfilBumdes/UpdateGambar/{id}',  [ProfilBumdesController::class, 'updateGambar'])->name('updategambarprofilbumdes');
         //usaha jasa di profil bumdes
         Route::post('/ProfilBumdes/TambahUsahaJasa',  [UsahaJasaController::class, 'tambahusahajasa'])->name('usahajasatambah');
-        Route::post('/ProfilBumdes/TambahJenisPendapatan/{id}',  [JenisPendapatanController::class, 'tambah'])->name('jenispendapatantambah');
+        Route::post('/ProfilBumdes/TambahJenisPendapatan/',  [JenisPendapatanController::class, 'tambah'])->name('jenispendapatantambah');
         Route::post('/ProfilBumdes/DeleteJenisPendapatan/{id}',  [JenisPendapatanController::class, 'delete'])->name('jenispendapatandelete');
     //insert
     Route::post('/Pengelola/Tambah',  [PengelolaController::class, 'tambah'])->name('tambahPengelola');
     Route::post('/Pengelola/Edit',  [PengelolaController::class, 'edit'])->name('editpengelola');
     Route::post('/Pengelola/Delete/{id}',  [PengelolaController::class, 'delete'])->name('deletePengelola');
 });
-Route::group(['prefix' => 'Jasa', 'middleware' => ['auth','Role:Accounting'] ],function () {
+Route::group(['prefix' => 'Jasa' ],function () {
 
     Route::get('/Transaksi Jasa',  [TransaksiJasaController::class, 'index'])->name('transaksijasa');
     Route::post('/Transaksi Jasa/Tambah',  [TransaksiJasaController::class, 'tambah'])->name('transaksijasatambah');
     Route::post('/Transaksi Jasa/UpdateGambar',  [TransaksiJasaController::class, 'updateGambar'])->name('updategambartransaksi');
-    Route::post('/Transaksi Jasa/UpdateTransaksi',  [TransaksiJasaController::class, 'updateTransaksi'])->name('edittransaksi');
+    Route::post('/Transaksi Jasa/UpdateTransaksi',  [TransaksiJasaController::class, 'editTransaksi'])->name('edittransaksijasa');
+    Route::post('/Transaksi Jasa/UpdateTransaksi/{id}',  [TransaksiJasaController::class, 'delete'])->name('deletetransaksijasa');
+    Route::get('/Transaksi Jasa/Detail/{id}',  [TransaksiJasaController::class, 'detail'])->name('detailtransaksijasa');
     // Route::get('/Data Akun',  [DataAkunController::class, 'index'])->name('dataakun');
 });
+// , 'middleware' => ['auth','Role:Accounting']

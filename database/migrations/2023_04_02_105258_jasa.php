@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTabelUsahaJasa extends Migration
+class Jasa extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateTabelUsahaJasa extends Migration
      */
     public function up()
     {
-        Schema::create('usaha', function (Blueprint $table) {
-            $table->string('id',30)->primary();
-            $table->string('namausaha',30);
-            $table->string('lokasiusaha');
-            $table->string('jenis pendapatan',255)->nullable();
+        Schema::create('jasa', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->string('id_usaha');
+        
+            $table->foreign('id_usaha')->references('id')->on('usaha')->onDelete('cascade');
         });
     }
 
@@ -28,6 +28,6 @@ class CreateTabelUsahaJasa extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tabel_usaha_jasa');
+        Schema::dropIfExists('jasa');
     }
 }

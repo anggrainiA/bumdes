@@ -15,10 +15,10 @@ class CreateTabelJenisPendapatan extends Migration
     {
         Schema::create('jenispendapatan', function (Blueprint $table) {
             $table->string('id',30)->primary()->nullable();
-            $table->string('idjasa',30)->nullable();
+            $table->string('id_transaksi',30)->nullable();
             $table->string('namajenispendapatan')->nullable();
             
-            $table->foreign('idjasa')->references('id')->on('usahajasa')->onDelete('cascade');
+            $table->foreign('id_transaksi')->references('id')->on('usaha')->onDelete('cascade');
         });
     }
 

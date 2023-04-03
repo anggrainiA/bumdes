@@ -64,10 +64,10 @@
                                                         <!-- Perlu dibahas kodenya gmn -->
                                                     </td>
                                                     <td>
-                                                        {{ $usaha[$loop->index]['namausaha']}}
+                                                        {{ $item['namausaha']}}
                                                     </td>
                                                     <td>
-                                                        {{ $pelanggan[$loop->index]['nama'] }}
+                                                        {{ $item['nama'] }}
                                                     </td>
                                                     <td>
                                                         {{200.000}}
@@ -86,13 +86,18 @@
                                                         <div class="conbtn">
                                                             <button class="btn btn-primary center fa fa-edit"
                                                                 data-toggle="modal" data-target="#edit"
-                                                                onclick="edit_data($item['tanggal'], $item['id'], $usaha[$loop->index]['namausaha'], $pelanggan[$loop->index]['nama'], $item['catatan'] )"></button>
+                                                                onclick="edit_data({{$item}},{{$usaha}},{{$transaksi}})"></button>
                                                             <!-- {{-- onclick="edit_data('{{ $item['tanggal'] }}', '{{ $jasa[$item['usaha']]['namajasa'] }}', '{{ $pelanggan[$item['pelanggan']]['nama'] }}', {{ $loop->index }})" --}} -->
-                                                            <button class="btn btn-danger center fa fa-trash"
-                                                                style="margin-left: 2%"></button>
+                                                            <form action="{{route('deletetransaksijasa',['id'=>$item['id']])}}" id="#delete-post-form " method="POST">
+                                                                @csrf
+                                                                <button class="btn btn-danger center fa fa-trash delete-user"
+                                                                    style="margin-left: 2%"></button>
+                                                            </form>
+
+
                                                             <button class="btn btn-success center mdi mdi-eye"
                                                                 style="margin-left: 2%"
-                                                                onclick="window.location.href">
+                                                                onclick="window.location.href='{{route('detailtransaksijasa',['id'=>$item['id']])}}'">
                                                                 Detail</button>
                                                         </div>
                                                     </td>
@@ -143,8 +148,8 @@
                             <div class="col-sm-8">
                                 <select name="usaha" class="form-control" >
 
-                                    @foreach ($pelanggan as $p)
-                                   <option>{{$p->nama}}</option>
+                                    @foreach ($usaha as $u)
+                                   <option value="{{$u->id}}">{{$u->namausaha}}</option>
                                    @endforeach
                                 </select>
                             </div>
@@ -154,8 +159,9 @@
                             <label class="col-sm-4 control-label">Nama Pelanggan</label>
                             <div class="col-sm-8">
                                 <select name="pelanggan" class="form-control" >
-                                    @foreach ($usaha as $u)
-                                   <option>{{$u->namausaha}}</option>
+                                   
+                                    @foreach ($pelanggan as $p)
+                                   <option value="{{$p->id}}">{{$p->nama}}</option>
                                    @endforeach
                                 </select>
                             </div>
@@ -199,10 +205,11 @@
                     <h4 class="modal-title" id="myModalLabel">Edit Transaksi Jasa</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST" class="form-horizontal"
+                    <form action="{{route('edittransaksijasa')}}" method="POST" class="form-horizontal"
                         role="form" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="id" id="edit_id">
+                        <input type="hidden" name="id" id="edit_id" value="">
+
                         <div class="form-group">
                             <label class="col-md-4 control-label">Tanggal</label>
                             <div class="col-md-8">
@@ -219,7 +226,9 @@
                             <label class="col-sm-4 control-label">Nama Usaha</label>
                             <div class="col-sm-8">
                                 <select id="edit_usah" name="usaha" class="form-control" required>
-                                  
+                                    @foreach ($usaha as $u)
+                                        <option value="{{ $u['namausaha'] }}" selected>{{ $u['namausaha'] }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -228,7 +237,9 @@
                             <label class="col-sm-4 control-label">Nama Pelanggan</label>
                             <div class="col-sm-8">
                                 <select id="edit_pelang" name="pelanggan" class="form-control" required>
-                                    <option id=""value="edit_pelang"></option>
+                                     @foreach ($pelanggan as $p)
+                                        <option value="{{ $p['id'] }}" selected>{{ $p['nama'] }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -297,6 +308,31 @@
 @endsection
 
 @section('script')
+ <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $('.delete-user').on('click',function(e){
+            e.preventDefault();
+            var form = $(this).parents('form');
+            // var id= $(this).attr('data-id');
+            swal({
+                title: "Ingin Menghapus?",
+                text: "Kamu akan menghapus data pengelola",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                        swal("Data Berhasil Dihapus !", {
+                        icon: "success",
+                    });
+                    form.submit();
+                }
+                
+            });
+        });
+       
+    </script>
     <script>
         function edit(gambar, id) {
             console.log('edit: ' + gambar);
@@ -304,13 +340,15 @@
             document.getElementById("gambar_src").src = gambar;
         }
 
-        function edit_data(tanggal,id, namausaha, namapelanggan,catatan) {
-            console.log(namapelanggan);
-            document.getElementById("edit_id").value = id;
-            document.getElementById("edit_usah").value = namausaha;
-            document.getElementById("datepicker-autoclose2").value = tanggal;
-            document.getElementById("edit_pelang").value = namapelanggan;
-            document.getElementById("edit_catat").value = catatan;
+        function edit_data(data,usaha,pelanggan) {
+            console.log(data);
+            console.log(usaha);
+            // console.log(pelanggan[0]['nama']);
+            document.getElementById("edit_id").value = data['id'];
+            document.getElementById("edit_usah").value = data['nama_usaha'];
+            document.getElementById("datepicker-autoclose2").value = data['tanggal'];
+            document.getElementById("edit_pelang").value = pelanggan;
+            document.getElementById("edit_catat").value = data['catatan'];
         }
 
         function validateFile() {

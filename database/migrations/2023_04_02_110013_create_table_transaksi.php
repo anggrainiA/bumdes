@@ -11,16 +11,19 @@ class CreateTableTransaksi extends Migration
      *
      * @return void
      */
-    public function up()
+     public function up()
     {
         Schema::create('transaksi', function (Blueprint $table) {
-            $table->string('id');
-            $table->string('nama_usaha');
-            $table->string('nama_pelanggan')->nullable();
+            $table->string('id')->primary()->unique();
+            $table->string('id_pelanggan');
+            $table->string('id_jasa');
             $table->string('catatan')->nullable();
             $table->string('bukti')->nullable();
             $table->string('tanggal');
-
+            $table->integer('total')->nullable();
+            $table->integer('bayar')->nullable();
+            $table->foreign('id_pelanggan')->references('id')->on('pelanggans')->onDelete('cascade');
+            $table->foreign('id_jasa')->references('id')->on('jasa')->onDelete('cascade');
         });
     }
 

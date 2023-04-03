@@ -14,7 +14,7 @@ class CreatePelanggansTable extends Migration
     public function up()
     {
         Schema::create('pelanggans', function (Blueprint $table) {
-            $table->id();
+            $table->string('id',30)->primary();
             $table->string('nama');
             $table->string('kontak');
             $table->string('alamat');

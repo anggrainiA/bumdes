@@ -13,8 +13,9 @@ class ProfilBumdesController extends Controller
     public function index(){
         $data=ProfilBumdes::all();
         $ketua=Pengelola::where('status', 'Ketua')->orWhere('status','Bendahara')->get();
-        $jasa2=UsahaJasaModel::join('jenispendapatan', 'jenispendapatan.idjasa', '=', 'usahajasa.id')->get(['jenispendapatan.namajenispendapatan']);
+        $jasa2=UsahaJasaModel::join('jenispendapatan','jenispendapatan.id_transaksi' , '=','usaha.id' )->get();
         $jasa1=UsahaJasaModel::All();
+        // dd($jasa2);
         return view('fitur.profilbumdes',compact('data','ketua','jasa2','jasa1'));
     }
     public function update(Request $request){

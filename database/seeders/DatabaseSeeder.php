@@ -50,6 +50,7 @@ class DatabaseSeeder extends Seeder
             'foto'=>'w',
         ]);
         Pelanggan::create([
+            'id'=>Str::random(30),
             'nama'=>'Default',
             'kontak'=>'00',
             'alamat'=>'00',

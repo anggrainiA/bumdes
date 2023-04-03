@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Str;
 class PelangganController extends Controller
 {
     /**
@@ -21,15 +21,20 @@ class PelangganController extends Controller
     public function store(Request $request)
     {
          // dd($request);
-    $validatedData = $request->validate([
+    $request->validate([
         'nama' => 'required|max:255',
         'alamat' =>'required',
         'kontak' => 'required',
     ]);
-
+    $data= Pelanggan::create([
+            'id'=> Str::random(30),
+            'nama' => $request->nama,
+            'alamat' =>$request->alamat,
+            'kontak' => $request->kontak,
+        ]);
 
     // $validatedData['id_pemasok']= auth()->user()->id;
-    Pelanggan::create($validatedData);
+    // Pelanggan::create($validatedData);
 
     return redirect('/pelanggan')->with('success', 'Data Pelanggan berhasil ditambahkan.');
     }
@@ -42,6 +47,7 @@ class PelangganController extends Controller
             'alamat' =>'required',
             'kontak' => 'required',
         ]);
+
 
         // dd($request);
         // $validatedData['id_pemasok']= auth()->user()->id;

@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Pelanggan extends Model
 {
     use HasFactory;
-    protected $guarded = [
-        'id',
-    ];
+    public $table='pelanggans';
+    protected $guarded = [];
+    public $incrementing = false;
+    
+    protected $primaryKey = 'id';
     public $timestamps = false;
 }

@@ -9,20 +9,22 @@ use App\Models\UsahaJasaModel;
 use Illuminate\Support\Str;
 class JenisPendapatanController extends Controller
 {
-    public function tambah(Request $request, $id){
+    public function tambah(Request $request){
+       
          $request->validate([
             'jenis' => ['required']
         ]);
         $data=JenisPendapatan::create([
             'id'=> Str::random(30),
-            'idjasa'=>$id,
+            'id_transaksi'=>$request->id,
             'namajenispendapatan' => $request->jenis
         ]);
+      
         return back();
     }
     public function delete(Request $request, $id){
         
-        $data=UsahaJasaModel::leftjoin('jenispendapatan', 'jenispendapatan.idjasa', '=', 'usahajasa.id')->delete();
+        $data=UsahaJasaModel::leftjoin('jenispendapatan', 'jenispendapatan.id_transaksi', '=', 'usaha.id')->delete();
       
         // $data=JenisPendapatan::create([
         //     'id'=> Str::random(30),

@@ -5,17 +5,17 @@
         <div class="container">
 
             <!-- Page-Title -->
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="page-header-title">
-                    <h4 class="pull-left page-title">Pelanggan</h4>
-                    {{-- <ol class="breadcrumb pull-right">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-header-title">
+                        <h4 class="pull-left page-title">Pelanggan</h4>
+                        {{-- <ol class="breadcrumb pull-right">
                         <li class="active">Dashboard</li>
                     </ol> --}}
-                    <div class="clearfix"></div>
+                        <div class="clearfix"></div>
+                    </div>
                 </div>
             </div>
-        </div>
 
 
             <div class="row">
@@ -52,15 +52,15 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        {{$item->nama}}
+                                                        {{ $item->nama }}
                                                         {{-- {{ $data == null ? 'kosong' : $item['nama'] }} --}}
                                                     </td>
                                                     <td>
-                                                        {{$item->kontak}}
+                                                        {{ $item->kontak }}
                                                         {{-- {{ $item == null ? 'kosong' : $item['kontak'] }} --}}
                                                     </td>
                                                     <td>
-                                                        {{$item->alamat}}
+                                                        {{ $item->alamat }}
                                                         {{-- {{ $data == null ? 'kosong' : $item['alamat'] }} --}}
                                                     </td>
                                                     <td>
@@ -79,14 +79,22 @@
                                                         <div class="conbtn">
                                                             <button class="btn btn-primary center fa fa-edit"
                                                                 data-toggle="modal" data-target="#edit"
-                                                                onclick="edit_data('{{ $item->nama }}', '{{ $item->kontak}}', '{{ $item->alamat}}', '/pelanggan/{{$item->id}}')"></button>
-                                                                <form method="POST" action="/pelanggan/{{$item->id}}" class="form-horizontal" role="form">
-                                                                   @method('delete')
-                                                                    @csrf
+                                                                onclick="edit_data('{{ $item->nama }}', '{{ $item->kontak }}', '{{ $item->alamat }}', '{{ route('pelanggan.update', ['pelanggan' => $item->id]) }}')"></button>
 
-                                                                    <button class="btn btn-danger center fa fa-trash"
-                                                                style="margin-left: 2%"></button>
-                                                                </form>
+                                                            <form method="POST"
+                                                                action="{{ route('pelanggan.destroy', ['pelanggan' => $item->id]) }}}}"
+                                                                class="form-horizontal" role="form">
+                                                                @method('delete')
+                                                                @csrf
+
+                                                                <button class="btn btn-danger center fa fa-trash"
+                                                                    style="margin-left: 2%"></button>
+                                                            </form>
+
+                                                            {{-- <button class="btn btn-success center mdi mdi-eye"
+                                                                style="margin-left: 2%"
+                                                                onclick="window.location.href='{{ route('pelanggan.show', ['pelanggan' => $item->id]) }}'">
+                                                                Hutang</button> --}}
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -116,8 +124,10 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Data Pelanggan</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="/pelanggan" class="form-horizontal" role="form">
+                    <form method="POST" action="{{ route('pelanggan.store') }}" class="form-horizontal" role="form">
                         @csrf
+
+                        <input type="hidden" name="status" value="pelanggan">
 
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nama Pelanggan</label>
@@ -166,11 +176,10 @@
                 </div>
                 <div class="modal-body">
 
-                    <form action="/pelanggan" method="POST" class="form-horizontal"
-                        role="form" id='form_update'>
+                    <form action="" method="POST" class="form-horizontal" role="form" id='form_update'>
                         @method('put')
                         @csrf
-                        <input type="hidden" name="id" id="id_p">
+                        {{-- <input type="hidden" name="id" id="id_p"> --}}
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nama Pelanggan</label>
                             <div class="col-md-8">
@@ -183,7 +192,7 @@
                             <label class="col-md-4 control-label">Nomor Telepon</label>
                             <div class="col-md-8">
                                 <input name="kontak" data-parsley-type="number" type="text" class="form-control"
-                                id="edit_kontak" placeholder="08XXXXXXXXXX" required />
+                                    id="edit_kontak" placeholder="08XXXXXXXXXX" required />
                             </div>
                         </div>
 

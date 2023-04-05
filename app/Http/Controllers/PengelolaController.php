@@ -2,53 +2,98 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Pengelola;
-use Illuminate\Support\Str;
-
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class PengelolaController extends Controller
 {
-    public function index(){
-        $data=Pengelola::all();
-        return view('fitur.pengelola',compact('data'));
-    }
-    public function tambah(Request $request){
-        
-        $request->validate([
-            'nama' => ['required'],
-            'password' => ['required'],
-            'nohp' => ['required'],
-            'status' => ['required'],
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return view('fitur.pengelola', [
+            'pengelola' => Pengelola::latest()->get()
         ]);
-        $data=Pengelola::create([
-            'id'=> Str::random(30),
-            'nama'=> $request->nama,
-            'password'=> Hash::make($request->password),
-            'no_telp'=> $request->nohp,
-            'status'=> $request->status
-        ]);
-        return back();
     }
-    public function edit(Request $request){
-        $request->validate([
-            'nama' => ['required'],
-            'password' => ['required'],
-            'nohp' => ['required'],
-            'status' => ['required'],
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'nama' => 'required|max:255',
+            'kontak' => 'required',
+            'username' =>'required',
+            'password' => 'required',
+            'status' => 'required'
         ]);
-        $data=Pengelola::where('id',$request->id)->update([
-            'nama'=> $request->nama,
-            'password'=> Hash::make($request->password),
-            'no_telp'=> $request->nohp,
-            'status'=> $request->status]);
-        return back();
+
+        $validatedData['password'] = Hash::make($validatedData['password']);
+
+        Pengelola::create($validatedData);
+
+        return redirect()->back()->with('success', 'Data Pengelola berhasil ditambahkan.');
     }
-    public function delete($id){
-        // dd($id);
-        Pengelola::destroy($id);
-        return back();
-         
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Pengelola  $pengelola
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Pengelola $pengelola)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Pengelola  $pengelola
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Pengelola $pengelola)
+    {
+        $rule = [
+            'nama' => 'required|max:255',
+            'kontak' => 'required',
+            'username' =>'required',
+            'status' => 'required'
+        ];
+
+        if ($request->password != '') {
+            $rule['password'] = ['required'];
+        }
+
+        $validatedData = $request->validate($rule);
+
+        if ($request->password != '') {
+            $validatedData['password'] = Hash::make($validatedData['password']);
+        }
+
+        Pengelola::where('id', $pengelola->id)->update($validatedData);
+
+        return redirect()->back()->with('success', 'Data Pengelola berhasil diupdate.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Pengelola  $pengelola
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Pengelola $pengelola)
+    {
+        Pengelola::destroy($pengelola->id);
+        return redirect()->back()->with('success', 'Pengelola berhasil dihapus!.');
     }
 }

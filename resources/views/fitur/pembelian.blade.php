@@ -9,6 +9,9 @@
                 <div class="col-sm-12">
                     <div class="page-header-title">
                         <h4 class="pull-left page-title">Dashboard</h4>
+                        @if ($errors->any())
+                            {!! implode('', $errors->all('<div>:message</div>')) !!}
+                        @endif
                         {{-- <ol class="breadcrumb pull-right">
                         <li class="active">Dashboard</li>
                     </ol> --}}
@@ -49,39 +52,41 @@
 
 
                                         <tbody>
-                                            @foreach ($data as $item)
+                                            @foreach ($transaksi as $item)
                                                 <tr>
                                                     <td>
                                                         <div class="conbtn">
-                                                            {{ $loop->index + 1 }}
+                                                            {{ $loop->iteration }}
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        {{ $data == null ? 'kosong' : $item['tanggal'] }}
+                                                        {{-- {{ $data == null ? 'kosong' : $item['tanggal'] }} --}}
+                                                        {{ $item->tanggal }}
                                                     </td>
                                                     <td>
-                                                        {{ '0001' }}
+                                                        {{ $item->id }}
                                                         <!-- Perlu dibahas kodenya gmn -->
                                                     </td>
                                                     <td>
-                                                        {{ $data == null ? 'kosong' : $pemasok[$item['pemasok']]['nama'] }}
+                                                        {{-- {{ $data == null ? 'kosong' : $pemasok[$item['pemasok']]['nama'] }} --}}
+                                                        {{ $item->orang->nama }}
                                                     </td>
                                                     <td>
-                                                        {{ $data == [] ? 'kosong' : $item['pembelian'] }}
-                                                        {{-- {{"Rp200,000"}} --}}
+                                                        {{-- {{ $data == [] ? 'kosong' : $item['pembelian'] }} --}}
+                                                        {{ $item->jualbeli->sum('total') }}
                                                     </td>
                                                     <td>
-                                                        {{ $data == [] ? 'kosong' : $usaha[$item['usaha']]['namadagang'] }}
-                                                        {{-- {{"Rp200,000"}} --}}
+                                                        {{-- {{ $data == [] ? 'kosong' : $usaha[$item['usaha']]['namadagang'] }} --}}
+                                                        {{ $item->usaha->nama }}
                                                     </td>
                                                     <td>
                                                         {{-- {{$data ==[] ? 'kosong' : $item['penghasilan']}} --}}
-                                                        <div class="conbtn">
+                                                        {{-- <div class="conbtn">
                                                             <img src="images/{{ $item['file'] }}" alt="nota"
                                                                 onclick="edit('images/{{ $item['file'] }}',{{ $loop->index }})"
                                                                 data-toggle="modal" data-target="#gambar"
                                                                 style="width: 30px; height: 30px;">
-                                                        </div>
+                                                        </div> --}}
 
                                                         {{-- {{"Rp200,000"}} --}}
                                                     </td>
@@ -89,12 +94,20 @@
                                                         <div class="conbtn">
                                                             <button class="btn btn-primary center fa fa-edit"
                                                                 data-toggle="modal" data-target="#edit"
-                                                                onclick='edit_data(@json($item),{{ $loop->index }})'></button>
-                                                            <button class="btn btn-danger center fa fa-trash"
-                                                                style="margin-left: 2%"></button>
+                                                                onclick="edit_data('{{ Route('transaksi.update', ['transaksi' => $item->id]) }}', '{{ $item->tanggal }}', '{{ $item->orang->nama }}', '{{ $item->usaha->nama }}', '{{ $item->keterangan }}')"></button>
+
+                                                            <form method="POST"
+                                                                action="{{ route('transaksi.destroy', ['transaksi' => $item->id]) }}"
+                                                                class="form-horizontal" role="form">
+                                                                @method('delete')
+                                                                @csrf
+                                                                <button class="btn btn-danger center fa fa-trash"
+                                                                    style="margin-left: 2%"></button>
+                                                            </form>
+
                                                             <button class="btn btn-success center mdi mdi-eye"
                                                                 style="margin-left: 2%"
-                                                                onclick="window.location.href='{{ route('get.notapembelian') }}?id={{ $loop->index }}'">
+                                                                onclick="window.location.href='{{ Route('transaksi.show', ['transaksi' => $item->id]) }}'">
                                                                 Detail</button>
                                                         </div>
                                                     </td>
@@ -125,9 +138,10 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Transaksi</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('post.pembelian') }}" method="POST" class="form-horizontal" role="form"
+                    <form action="{{ route('transaksi.store') }}" method="POST" class="form-horizontal" role="form"
                         enctype="multipart/form-data">
                         @csrf
+                        <input type="hidden" name="status" value="pembelian">
                         <div class="form-group">
                             <label class="col-md-4 control-label">Tanggal</label>
                             <div class="col-md-8">
@@ -143,9 +157,9 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Nama Pemasok</label>
                             <div class="col-sm-8">
-                                <select name="pemasok" class="form-control" required>
+                                <select name="id_orang" class="form-control" required>
                                     @foreach ($pemasok as $isi)
-                                        <option value="{{ $loop->index }}">{{ $isi['nama'] }}</option>
+                                        <option value="{{ $isi->id }}">{{ $isi->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -154,9 +168,9 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Nama Usaha</label>
                             <div class="col-sm-8">
-                                <select name="usaha" class="form-control" required>
+                                <select name="id_usaha" class="form-control" required>
                                     @foreach ($usaha as $isi)
-                                        <option value="{{ $loop->index }}">{{ $isi['namadagang'] }}</option>
+                                        <option value="{{ $isi->id }}">{{ $isi->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -165,7 +179,7 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Catatan Transaksi</label>
                             <div class="col-md-8">
-                                <input name="catatan" type="text" class="form-control"
+                                <input name="keterangan" type="text" class="form-control"
                                     placeholder="Catatan Transaksi (bisa saja kosong)">
                             </div>
                         </div>
@@ -174,7 +188,7 @@
                             <label class="col-md-4 control-label">Bukti Transaksi</label>
                             <div class="col-md-8">
                                 <input class="form-control" name="file" type="file" id="file"
-                                    onchange="validateFile()" required />
+                                    onchange="validateFile()" />
                             </div>
                         </div>
 
@@ -201,10 +215,11 @@
                     <h4 class="modal-title" id="myModalLabel">Edit Transaksi Pembelian</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('post.editpembelian') }}" method="POST" class="form-horizontal"
-                        role="form" enctype="multipart/form-data">
+                    <form action="" id="edit_url" method="POST" class="form-horizontal" role="form"
+                        enctype="multipart/form-data">
+                        @method('put')
                         @csrf
-                        <input type="hidden" name="id" id="edit_id">
+
                         <div class="form-group">
                             <label class="col-md-4 control-label">Tanggal</label>
                             <div class="col-md-8">
@@ -220,9 +235,9 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Nama Pemasok</label>
                             <div class="col-sm-8">
-                                <select id="edit_pemasok" name="pemasok" class="form-control" required>
+                                <select id="edit_pemasok" name="id_orang" class="form-control" required>
                                     @foreach ($pemasok as $item)
-                                        <option value="{{ $loop->index }}">{{ $item['nama'] }}</option>
+                                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -231,9 +246,9 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Nama Pemasok</label>
                             <div class="col-sm-8">
-                                <select id="edit_usaha" name="usaha" class="form-control" required>
+                                <select id="edit_usaha" name="id_usaha" class="form-control" required>
                                     @foreach ($usaha as $item)
-                                        <option value="{{ $loop->index }}">{{ $item['namadagang'] }}</option>
+                                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -242,7 +257,7 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Catatan Transaksi</label>
                             <div class="col-md-8">
-                                <input id="edit_catat" name="catatan" type="text" class="form-control"
+                                <input id="edit_catat" name="keterangan" type="text" class="form-control"
                                     placeholder="Catatan Transaksi (bisa saja kosong)">
                             </div>
                         </div>
@@ -270,7 +285,7 @@
                     <h4 class="modal-title" id="myModalLabel">Bukti Transaksi</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('post.pembelian') }}" method="POST" class="form-horizontal" role="form"
+                    <form action="" method="POST" class="form-horizontal" role="form"
                         enctype="multipart/form-data">
                         @csrf
                         <div class="conbtn">
@@ -311,15 +326,25 @@
             document.getElementById("gambar_src").src = gambar;
         }
 
-        function edit_data(data, id) {
-            console.log('editdata: ' + data['usaha']);
-            document.getElementById("edit_id").value = id;
-            document.getElementById("datepicker-autoclose2").value = data['tanggal'];
-            document.getElementById("edit_pemasok").value = data['pemasok'];
-            document.getElementById("edit_usaha").value = data['usaha'];
-            document.getElementById("edit_catat").value = data['catatan'];
+        function edit_data(url, tanggal, orang, usaha, keterangan) {
+            // console.log('editdata: ' + data['usaha']);
+            document.getElementById("edit_url").action = url;
+            document.getElementById("datepicker-autoclose2").value = tanggal;
+            document.getElementById("edit_catat").value = keterangan;
+
+            var selpemasok = document.getElementById("edit_pemasok");
+            var selusaha = document.getElementById("edit_usaha");
+            setSelectedValue(selpemasok, orang);
+            setSelectedValue(selusaha, usaha);
         }
 
-        
+        function setSelectedValue(selectObj, valueToSet) {
+            for (var i = 0; i < selectObj.options.length; i++) {
+                if (selectObj.options[i].text == valueToSet) {
+                    selectObj.options[i].selected = true;
+                    return;
+                }
+            }
+        }
     </script>
 @endsection

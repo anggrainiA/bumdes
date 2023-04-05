@@ -10,7 +10,7 @@
                     <div class="page-header-title">
                         <ol class="breadcrumb pull-right">
                             {{-- <li><a href="#">Transaksi Jasa</a></li> --}}
-                            <li><a href="{{ route('get.datahutang') }}">Data Hutang</a></li>
+                            <li><a href="">Data Hutang</a></li>
                             <li class="active">Nota Hutang BUMDes</li>
                         </ol>
                         <div class="clearfix"></div>
@@ -36,17 +36,17 @@
                                             <div class="m-t-5">
                                                 <form class="form" role="form">
                                                     <div class="form-group">
-                                                        <label class="control-label">Bumdes</label>
+                                                        <label class="control-label">Pemasok</label>
                                                         <div class="">
                                                             <input type="text" name="nota" class="form-control"
-                                                                disabled="disabled" value="{{ 'Halo' }}">
+                                                                disabled="disabled" value="{{ $transaksi->orang->nama }}">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Hutang</label>
                                                         <div class="">
                                                             <input type="text" name="tanggal" class="form-control"
-                                                                disabled="disabled" value="{{ 5000 }}">
+                                                                disabled="disabled" value="{{ $transaksi->hutang }}">
                                                         </div>
                                                     </div>
                                                 </form>
@@ -59,14 +59,14 @@
                                                         <label class="control-label">Alamat</label>
                                                         <div class="">
                                                             <input type="text" name="pelanggan" class="form-control"
-                                                                disabled="disabled" value="Desa kuta">
+                                                                disabled="disabled" value="{{ $transaksi->orang->alamat }}">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Nomor HP</label>
                                                         <div class="">
                                                             <input type="text" name="catatan" class="form-control"
-                                                                disabled="disabled" value="">
+                                                                disabled="disabled" value="{{ $transaksi->orang->kontak }}">
                                                         </div>
                                                     </div>
                                                 </form>
@@ -89,7 +89,7 @@
                         Bayar </button>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h3 class="panel-title"> Riwayat Hutang</h3>
@@ -129,50 +129,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title"> Riwayat Bayar</h3>
-
-                        </div>
-
-                        <div class="panel-body">
-                            <table id="datatable-responsive2" class="table table-hover table-bordered dt-responsive nowrap"
-                                cellspacing="0" width="100%">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align: center;">No</th>
-                                        <th style="text-align: center;">No Transaksi</th>
-                                        <th style="text-align: center;">Tanggal Transaksi</th>
-                                        <th style="text-align: center;">Total Transaksi</th>
-                                        <th style="text-align: center;">Sisa Hutang</th>
-                                        {{-- <th style="text-align: center;">Aksi</th> --}}
-                                    </tr>
-                                </thead>
-
-
-                                <tbody>
-
-                                    <tr>
-                                        <td style="text-align: center;">1</td>
-                                        <td style="text-align: center;">14045</td>
-                                        <td style="text-align: center;">05 Desember 2022</td>
-                                        <td style="text-align: center;">20000</td>
-                                        <td style="text-align: center;">5000</td>
-                                        {{-- <td style="text-align: center;"><Button class="btn btn-primary">Bayar</Button></td> --}}
-                                    </tr>
-
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
             </div>
 
 
@@ -180,8 +136,7 @@
 
     </div> <!-- content -->
     <!-- sample modal content -->
-    <div id="bayar" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
+    <div id="bayar" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -193,8 +148,8 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">Jumlah</label>
                             <div class="col-md-10">
-                                <input name="kode" data-parsley-type="number" type="text"
-                                    class="form-control" placeholder="Jumlah" data-parsley-maxlength="8" required />
+                                <input name="kode" data-parsley-type="number" type="text" class="form-control"
+                                    placeholder="Jumlah" data-parsley-maxlength="8" required />
                             </div>
                         </div>
 

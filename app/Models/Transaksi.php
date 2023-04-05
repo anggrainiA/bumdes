@@ -8,13 +8,34 @@ use Illuminate\Database\Eloquent\Model;
 class Transaksi extends Model
 {
     use HasFactory;
-    public $table='transaksi';
-    protected $guarded=[];
 
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    
-    // // protected $fillable = ['name', 'password', ];
-    public $timestamps = false;
+    protected $guarded = [
+        'id'
+    ];
+ 
+
+    public function orang()
+    {
+        return $this->belongsTo(Orang::class, 'id_orang');
+    }
+
+    public function usaha()
+    {
+        return $this->belongsTo(Usaha::class, 'id_usaha');
+    }
+
+    public function jualbeli()
+    {
+        return $this->hasMany(Jualbeli::class, 'id_transaksi');
+    }
+
+    public function hutang()
+    {
+        return $this->hasMany(Hutang::class, 'id_transaksi');
+    }
+
+    public function latestHutang()
+    {
+        return $this->hasOne(Hutang::class, 'id_transaksi')->latestOfMany();
+    }
 }
-

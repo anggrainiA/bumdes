@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Models\ProfilBumdes;
+use App\Models\Bumdes;
 
 use Illuminate\Support\Facades\View;
 
@@ -27,7 +27,7 @@ class ComposerServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer('template.sidebar', function ($view) {
-            $view->with('profilbumdes', ProfilBumdes::All());
+            $view->with('profilbumdes', Bumdes::All());
         });
     }
 }

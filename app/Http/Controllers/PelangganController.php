@@ -2,45 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pelanggan;
+use App\Models\Orang;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+
 class PelangganController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        return view('fitur.pelanggan', ['pelanggan' => Pelanggan::all()]);
-        // return view('fitur.pelanggan', compact('data'));
+        return view('fitur.pelanggan', [
+            'pelanggan' => Orang::where('status', 'pelanggan')->latest()->get()
+        ]);
     }
 
     public function store(Request $request)
     {
-         // dd($request);
-    $request->validate([
-        'nama' => 'required|max:255',
-        'alamat' =>'required',
-        'kontak' => 'required',
-    ]);
-    $data= Pelanggan::create([
-            'id'=> Str::random(30),
-            'nama' => $request->nama,
-            'alamat' =>$request->alamat,
-            'kontak' => $request->kontak,
+        $validatedData = $request->validate([
+            'nama' => 'required|max:255',
+            'alamat' =>'required',
+            'kontak' => 'required',
+            'status' => 'required'
         ]);
 
-    // $validatedData['id_pemasok']= auth()->user()->id;
-    // Pelanggan::create($validatedData);
+        Orang::create($validatedData);
 
-    return redirect('/pelanggan')->with('success', 'Data Pelanggan berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Data Pelanggan berhasil ditambahkan.');
+    
     }
 
-
-    public function update(Request $request, Pelanggan $pelanggan)
+    public function update(Request $request, Orang $pelanggan)
     {
         $validatedData = $request->validate([
             'nama' => 'required|max:255',
@@ -48,23 +38,14 @@ class PelangganController extends Controller
             'kontak' => 'required',
         ]);
 
+        Orang::where('id', $pelanggan->id)->update($validatedData);
 
-        // dd($request);
-        // $validatedData['id_pemasok']= auth()->user()->id;
-        Pelanggan::where('id', $pelanggan->id)->update($validatedData);
-
-        return redirect('/pelanggan')->with('success', 'Data Pelanggan berhasil diupdate.');
+        return redirect()->back()->with('success', 'Data Pelanggan berhasil diupdate.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Pelanggan  $pelanggan
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Pelanggan $pelanggan)
+    public function destroy(Orang $pelanggan)
     {
-        Pelanggan::destroy($pelanggan->id);
-        return redirect('/pelanggan')->with('success', 'Pelanggan berhasil dihapus!.');
+        Orang::destroy($pelanggan->id);
+        return redirect()->back()->with('success', 'Pelanggan berhasil dihapus!.');
     }
 }

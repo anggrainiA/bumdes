@@ -10,7 +10,7 @@
                     <div class="page-header-title">
                         <ol class="breadcrumb pull-right">
                             <li><a href="#">Transaksi Jasa</a></li>
-                            <li><a href="">Pendapatan</a></li>
+                            <li><a href="{{ route('get.pendapatan') }}">Pendapatan</a></li>
                             <li class="active">Nota Transaksi Pendapatan</li>
                         </ol>
                         <div class="clearfix"></div>
@@ -39,7 +39,7 @@
                                                         <label class="control-label">Nomor Transaksi</label>
                                                         <div class="">
                                                             <input type="text" name="nota" class="form-control"
-                                                                disabled="disabled" value="{{ $transaksi[0]['id'] }}">
+                                                                disabled="disabled" value="{{ 001 }}">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -47,7 +47,7 @@
                                                         <div class="">
                                                             <input type="text" name="tanggal" class="form-control"
                                                                 disabled="disabled"
-                                                                value="{{ $transaksi[0]['tanggal'] }}">
+                                                                value="{{ $pendapatan[$loc]['tanggal'] }}">
                                                         </div>
                                                     </div>
                                                 </form>
@@ -61,7 +61,7 @@
                                                         <div class="">
                                                             <input type="text" name="pelanggan" class="form-control"
                                                                 disabled="disabled"
-                                                                value="{{ $transaksi[0]['nama'] }}">
+                                                                value="{{ $pelanggan[$pendapatan[$loc]['pelanggan']]['nama'] }}">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -69,7 +69,7 @@
                                                         <div class="">
                                                             <input type="text" name="catatan" class="form-control"
                                                                 disabled="disabled"
-                                                                value="{{ $transaksi[0]['catatan'] }}">
+                                                                value="{{ $pendapatan[$loc]['catatan'] }}">
                                                         </div>
                                                     </div>
                                                 </form>
@@ -98,7 +98,40 @@
                                         <tbody>
 
 
-                                           
+                                            @isset($data[$loc]['nota'])
+                                                @foreach ($data[$loc]['nota'] as $item)
+                                                    <tr>
+                                                        <td>
+                                                            <div class="conbtn">
+                                                                {{ $loop->index + 1 }}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            {{ $data == null ? 'kosong' : $item['jenis'] }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $data == null ? 'kosong' : $item['harga'] }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $data == null ? 'kosong' : $item['jumlah'] }}
+                                                        </td>
+                                                        <td>
+
+                                                            {{ $item['total'] }}
+
+                                                        </td>
+                                                        <td>
+                                                            <div class="conbtn">
+                                                                <button class="btn btn-primary center fa fa-edit"
+                                                                    data-toggle="modal" data-target="#edit"
+                                                                    onclick='edit_data(@json($item),{{ $loop->index }})'></button>
+                                                                <button class="btn btn-danger center fa fa-trash"
+                                                                    style="margin-left: 2%"></button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endisset
 
                                         </tbody>
                                     </table>
@@ -114,7 +147,7 @@
                                     <div class="col-md-5">
                                         <input id="totaltr" name="totaltransaksi" data-parsley-type="number"
                                             type="text" disabled="disabled" class="form-control" placeholder="0"
-                                            value="" required>
+                                            value="{{ $total }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-8 m-t-5">
@@ -168,7 +201,7 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Data Nota</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="" class="form-horizontal"
+                    <form method="POST" action="{{ route('post.notapendapatan') }}" class="form-horizontal"
                         role="form">
                         @csrf
                         <div class="form-group">
@@ -176,7 +209,9 @@
                             <div class="col-sm-8">
                                 <select name="jenis" class="form-control" required>
 
-                                    
+                                    @foreach ($jasa[$pendapatan[$loc]['usaha']]['jenis'] as $item)
+                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @endforeach
 
                                 </select>
                             </div>
@@ -218,7 +253,7 @@
                     <h4 class="modal-title" id="myModalLabel">Edit Nota Transaksi Jasa</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST" class="form-horizontal"
+                    <form action="{{ route('post.editnotapendapatan') }}" method="POST" class="form-horizontal"
                         role="form" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="id" id="edit_id">
@@ -227,7 +262,9 @@
                             <label class="col-sm-4 control-label">Jenis Usaha Jasa</label>
                             <div class="col-sm-8">
                                 <select id="edit_jenis" name="jenis" class="form-control" required>
-                                   
+                                    @foreach ($jasa[$pendapatan[$loc]['usaha']]['jenis'] as $item)
+                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

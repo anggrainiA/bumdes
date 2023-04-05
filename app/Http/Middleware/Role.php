@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class Role
 {
@@ -19,7 +20,7 @@ class Role
         $roles = array_slice(func_get_args(), 2);
 
         foreach ($roles as $role) { 
-            $user = \Auth::user()->status;
+            $user = Auth::user()->status;
             if( $user == $role){
                 return $next($request);
             }

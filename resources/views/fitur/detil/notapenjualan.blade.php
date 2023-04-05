@@ -10,7 +10,7 @@
                     <div class="page-header-title">
                         <ol class="breadcrumb pull-right">
                             <li><a href="#">Transaksi Dagang</a></li>
-                            <li><a href="{{ route('get.penjualan') }}">Penjualan</a></li>
+                            <li><a href="">Penjualan</a></li>
                             <li class="active">Nota Transaksi Penjualan</li>
                         </ol>
                         <div class="clearfix"></div>
@@ -39,15 +39,14 @@
                                                         <label class="control-label">Nomor Transaksi</label>
                                                         <div class="">
                                                             <input type="text" name="nota" class="form-control"
-                                                                disabled="disabled" value="{{ 001 }}">
+                                                                disabled="disabled" value="{{ $transaksi->id }}">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Tanggal Transaksi</label>
                                                         <div class="">
                                                             <input type="text" name="tanggal" class="form-control"
-                                                                disabled="disabled"
-                                                                value="{{$penjualan[$loc]['tanggal']}} ">
+                                                                disabled="disabled" value="{{ $transaksi->tanggal }}">
                                                         </div>
                                                     </div>
                                                 </form>
@@ -60,16 +59,14 @@
                                                         <label class="control-label">Nama Pelanggan</label>
                                                         <div class="">
                                                             <input type="text" name="pelanggan" class="form-control"
-                                                                disabled="disabled"
-                                                                value="{{ $pelanggan[$penjualan[$loc]['pelanggan']]['nama'] }}">
+                                                                disabled="disabled" value="{{ $transaksi->orang->nama }}">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Catatan Transaksi</label>
                                                         <div class="">
                                                             <input type="text" name="catatan" class="form-control"
-                                                                disabled="disabled"
-                                                                value="{{ $penjualan[$loc]['catatan'] }}">
+                                                                disabled="disabled" value="{{ $transaksi->keterangan }}">
                                                         </div>
                                                     </div>
                                                 </form>
@@ -98,7 +95,7 @@
                                         <tbody>
 
 
-                                            @isset($data[$loc]['nota'])
+                                            {{-- @isset($data[$loc]['nota'])
                                                 @foreach ($data[$loc]['nota'] as $item)
                                                     <tr>
                                                         <td>
@@ -124,14 +121,14 @@
                                                             <div class="conbtn">
                                                                 <button class="btn btn-primary center fa fa-edit"
                                                                     data-toggle="modal" data-target="#edit"
-                                                                    onclick='edit_data(@json($item),{{ $item["barang"] }})'></button>
+                                                                    onclick='edit_data(@json($item),{{ $item['barang'] }})'></button>
                                                                 <button class="btn btn-danger center fa fa-trash"
                                                                     style="margin-left: 2%"></button>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                 @endforeach
-                                            @endisset
+                                            @endisset --}}
 
                                         </tbody>
                                     </table>
@@ -147,7 +144,7 @@
                                     <div class="col-md-5">
                                         <input id="totaltr" name="totaltransaksi" data-parsley-type="number"
                                             type="text" disabled="disabled" class="form-control" placeholder="0"
-                                            value="{{ $total }}" required>
+                                            value="" required>
                                     </div>
                                 </div>
                                 <div class="col-md-8 m-t-5">
@@ -199,17 +196,17 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Data Nota</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('post.notapenjualan') }}" class="form-horizontal"
-                        role="form">
+                    <form method="POST" action="{{ route('jualbeli.store') }}" class="form-horizontal" role="form">
                         @csrf
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Nama/Jenis Barang</label>
                             <div class="col-sm-8">
                                 <select name="barang" class="form-control" required>
-                                    @foreach ($filteredData as $item)
+                                    {{-- @foreach ($filteredData as $item)
                                         <option value="{{ $loop->index }}">{{ $item['nama'] }}
-                                            ({{ $item['harga'] + $item['untung'] }})</option>
-                                    @endforeach
+                                            ({{ $item['harga'] + $item['untung'] }})
+                                        </option>
+                                    @endforeach --}}
                                 </select>
 
                             </div>
@@ -244,19 +241,20 @@
                     <h4 class="modal-title" id="myModalLabel">Edit Nota Penjualan</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('post.editnotapenjualan') }}" method="POST" class="form-horizontal"
-                        role="form" enctype="multipart/form-data">
+                    <form action="" id="edit_url" method="POST" class="form-horizontal" role="form"
+                        enctype="multipart/form-data">
+                        @method('put')
                         @csrf
-                        <input type="hidden" name="id" id="edit_id">
 
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Nama/Jenis Barang</label>
                             <div class="col-sm-8">
                                 <select id="edit_barang" name="barang" class="form-control" required>
-                                    @foreach ($filteredData as $item)
+                                    {{-- @foreach ($filteredData as $item)
                                         <option value="{{ $loop->index }}">{{ $item['nama'] }}
-                                            ({{ $item['harga'] + $item['untung'] }})</option>
-                                    @endforeach
+                                            ({{ $item['harga'] + $item['untung'] }})
+                                        </option>
+                                    @endforeach --}}
                                 </select>
 
                             </div>
@@ -264,8 +262,8 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Jumlah</label>
                             <div class="col-md-8">
-                                <input id="edit_jumlah" name="jumlah" data-parsley-type="number" type="text" class="form-control"
-                                    placeholder="Jumlah Barang" required>
+                                <input id="edit_jumlah" name="jumlah" data-parsley-type="number" type="text"
+                                    class="form-control" placeholder="Jumlah Barang" required>
                             </div>
                         </div>
 

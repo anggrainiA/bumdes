@@ -5,21 +5,21 @@
         <div class="container">
 
             <!-- Page-Title -->
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="page-header-title">
-                    <h4 class="pull-left page-title">Data Hutang</h4>
-                    {{-- <ol class="breadcrumb pull-right">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-header-title">
+                        <h4 class="pull-left page-title">Data Hutang</h4>
+                        {{-- <ol class="breadcrumb pull-right">
                         <li class="active">Dashboard</li>
                     </ol> --}}
-                    <div class="clearfix"></div>
+                        <div class="clearfix"></div>
+                    </div>
                 </div>
             </div>
-        </div>
 
 
             <div class="row">
-                {{-- {{dd($Tab == "jasa")}} --}}
+                @php $Tab = 'jasa'; @endphp
                 <ul class="nav nav-tabs navtab-bg nav-justified">
                     <li class={{ $Tab == 'jasa' ? 'active' : '' }}>
                         <a href="#home1" data-toggle="tab" aria-expanded="false">
@@ -45,8 +45,8 @@
 
                             <div class="panel-body">
                                 <div class="row mt-2">
-                                    {{-- <button class="btn btn-primary mb-2 pb-2" style="margin-bottom: 25px"
-                                        data-toggle="modal" data-target="#tambahdatajasa"> Tambah Data Usaha </button> --}}
+                                    <button class="btn btn-primary mb-2 pb-2" style="margin-bottom: 25px"
+                                        data-toggle="modal" data-target="#tambahdatajasa"> Tambah Data Usaha </button>
 
                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                         <table id="datatable-responsive"
@@ -64,48 +64,48 @@
 
 
                                             <tbody>
-                                                
-                                                    <tr>
-                                                        <td>
-                                                            <div class="conbtn">
-                                                                {{-- {{ $loop->index + 1 }} --}}
-                                                                1
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            {{-- {{ $item['namajasa'] }} --}}
-                                                            Wahyudi
-                                                        </td>
-                                                        <td>
-                                                            {{-- {{ $item['alamatjasa'] }} --}}
-                                                            Jln raya no 1
-                                                        </td>
-                                                        <td>
-                                                            {{-- {{ $item['alamatjasa'] }} --}}
-                                                            2300000
-                                                        </td>
-                                                        {{-- <td>
+
+                                                <tr>
+                                                    <td>
+                                                        <div class="conbtn">
+                                                            {{-- {{ $loop->index + 1 }} --}}
+                                                            1
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        {{-- {{ $item['namajasa'] }} --}}
+                                                        Wahyudi
+                                                    </td>
+                                                    <td>
+                                                        {{-- {{ $item['alamatjasa'] }} --}}
+                                                        Jln raya no 1
+                                                    </td>
+                                                    <td>
+                                                        {{-- {{ $item['alamatjasa'] }} --}}
+                                                        2300000
+                                                    </td>
+                                                    {{-- <td>
                                                             <ul>
                                                                 @foreach ($item['jenis'] as $isi)
                                                                     <li>{{ $isi }}</li>
                                                                 @endforeach
                                                             </ul>
                                                         </td> --}}
-                                                        <td>
-                                                            <div class="conbtn">
-                                                                <button class="btn btn-primary center fa fa-edit"
-                                                                    data-toggle="modal" data-target="#editjasa"
-                                                                    onclick="window.location.href='{{ route('get.hutangpelanggan') }}?id={{ 1 }}'">
-                                                                </button>
-                                                                {{-- <button class="btn btn-danger center fa fa-trash"
+                                                    <td>
+                                                        <div class="conbtn">
+                                                            <button class="btn btn-primary center fa fa-edit"
+                                                                data-toggle="modal" data-target="#editjasa"
+                                                                onclick="window.location.href=''">
+                                                            </button>
+                                                            {{-- <button class="btn btn-danger center fa fa-trash"
                                                                     style="margin-left: 2%"></button> --}}
-                                                                {{-- <button class="btn btn-success center fa fa-plus"
+                                                            {{-- <button class="btn btn-success center fa fa-plus"
                                                                     style="margin-left: 2%" data-toggle="modal"
                                                                     data-target="#editjenis">
                                                                     Jenis Pendapatan</button> --}}
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                        </div>
+                                                    </td>
+                                                </tr>
 
                                             </tbody>
                                         </table>
@@ -140,31 +140,31 @@
                                             </thead>
 
                                             <tbody>
-                                                {{-- @foreach ($datadagang as $item) --}}
+                                                @foreach ($bumdes as $item)
                                                     <tr>
                                                         <td>
                                                             <div class="conbtn">
-                                                                {{-- {{ $loop->index + 1 }} --}}
+                                                                {{ $loop->iteration }}
                                                                 1
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            {{-- {{ $item['namadagang'] }} --}}
+                                                            {{ $item->orang->nama }}
                                                         </td>
                                                         <td>
-                                                            {{-- {{ $item['alamatdagang'] }} --}}
+                                                            {{ $item->hutang->last()->sisa }}
                                                         </td>
                                                         <td>
                                                             <div class="conbtn">
                                                                 <button class="btn btn-primary center fa fa-edit"
-                                                                    data-toggle="modal" data-target="#editdagangs" onclick="window.location.href='{{ route('get.hutangusaha') }}?id={{ 1 }}'"></button>
+                                                                    data-toggle="modal" data-target="#editdagangs"
+                                                                    onclick="window.location.href='{{ route('hutang.edit', ['hutang' => $item->id]) }}'"></button>
                                                                 {{-- <button class="btn btn-danger center fa fa-trash"
                                                                     style="margin-left: 2%"></button> --}}
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                {{-- @endforeach --}}
-
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -192,7 +192,7 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Data Usaha</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form" action="{{ route('post.datausaha') }}" method="post">
+                    <form class="form-horizontal" role="form" action="" method="post">
                         @csrf
                         <input type="hidden" name="jenis" value=1> {{-- lempar jenis --}}
                         <div class="form-group">
@@ -233,8 +233,7 @@
                     <h4 class="modal-title" id="myModalLabel">Edit Data Usaha</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form" action="{{ route('post.editdatausaha') }}"
-                        method="post">
+                    <form class="form-horizontal" role="form" action="" method="post">
                         @csrf
                         <input type="hidden" name="jenis" value=1> {{-- lempar jenis --}}
                         <input type="hidden" name="id" id="id_jasa">
@@ -276,7 +275,7 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Data Usaha</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form" action="{{ route('post.datausaha') }}" method="post">
+                    <form class="form-horizontal" role="form" action="" method="post">
                         @csrf
                         <input type="hidden" name="jenis" value=2>
                         <div class="form-group">
@@ -317,8 +316,7 @@
                     <h4 class="modal-title" id="myModalLabel">Edit Data Usaha</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form" action="{{ route('post.editdatausaha') }}"
-                        method="post">
+                    <form class="form-horizontal" role="form" action="" method="post">
                         @csrf
                         <input type="hidden" name="jenis" value=2> {{-- lempar jenis --}}
                         <input type="hidden" name="id" id="id_dagang">
@@ -361,7 +359,7 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" role="form" style="margin-left: 5px;" method="post"
-                        action="{{ route('post.jenisdatausaha') }}">
+                        action="">
                         @csrf
 
                         <input type="hidden" id="isidata" name="id">

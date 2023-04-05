@@ -10,7 +10,7 @@
                     <div class="page-header-title">
                         <ol class="breadcrumb pull-right">
                             <li><a href="#">Transaksi Dagang</a></li>
-                            <li><a href="{{ route('get.pembelian') }}">Pembelian</a></li>
+                            <li><a href="">Pembelian</a></li>
                             <li class="active">Nota Transaksi Pembelian</li>
                         </ol>
                         <div class="clearfix"></div>
@@ -39,15 +39,14 @@
                                                         <label class="control-label">Nomor Transaksi</label>
                                                         <div class="">
                                                             <input type="text" name="nota" class="form-control"
-                                                                disabled="disabled" value="{{ 001 }}">
+                                                                disabled="disabled" value="{{ $transaksi->id }}">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Tanggal Transaksi</label>
                                                         <div class="">
                                                             <input type="text" name="tanggal" class="form-control"
-                                                                disabled="disabled"
-                                                                value="{{ $pembelian[$loc]['tanggal'] }}">
+                                                                disabled="disabled" value="{{ $transaksi->tanggal }}">
                                                         </div>
                                                     </div>
                                                 </form>
@@ -60,16 +59,14 @@
                                                         <label class="control-label">Nama Pemasok</label>
                                                         <div class="">
                                                             <input type="text" name="pemasok" class="form-control"
-                                                                disabled="disabled"
-                                                                value="{{ $pemasok[$pembelian[$loc]['pemasok']]['nama'] }}">
+                                                                disabled="disabled" value="{{ $transaksi->orang->nama }}">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Catatan Transaksi</label>
                                                         <div class="">
                                                             <input type="text" name="catatan" class="form-control"
-                                                                disabled="disabled"
-                                                                value="{{ $pembelian[$loc]['catatan'] }}">
+                                                                disabled="disabled" value="{{ $transaksi->keterangan }}">
                                                         </div>
                                                     </div>
                                                 </form>
@@ -97,41 +94,46 @@
 
                                         <tbody>
 
+                                            @foreach ($transaksi->jualbeli as $item)
+                                                <tr>
+                                                    <td>
+                                                        <div class="conbtn">
+                                                            {{ $loop->iteration }}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        {{-- {{ $data == null ? 'kosong' : $item['nama'] }} --}}
+                                                        {{ $item->barang->nama }}
+                                                    </td>
+                                                    <td>
+                                                        {{-- {{ $data == null ? 'kosong' : $item['harga'] }} --}}
+                                                        {{ $item->harga }}
+                                                    </td>
+                                                    <td>
+                                                        {{-- {{ $data == null ? 'kosong' : $item['jumlah'] }} --}}
+                                                        {{ $item->kuantitas }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $item->total }}
+                                                    </td>
+                                                    <td>
+                                                        <div class="conbtn">
+                                                            <button class="btn btn-primary center fa fa-edit"
+                                                                data-toggle="modal" data-target="#edit"
+                                                                onclick="edit_data('{{ Route('jualbeli.update', ['jualbeli' => $item->id]) }}', '{{ $item->barang->nama }}', '{{ $item->harga }}', '{{ $item->kuantitas }}')"></button>
 
-                                            @isset($data[$loc]['nota'])
-                                                @foreach ($data[$loc]['nota'] as $item)
-                                                    <tr>
-                                                        <td>
-                                                            <div class="conbtn">
-                                                                {{ $loop->index + 1 }}
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            {{ $data == null ? 'kosong' : $item['nama'] }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $data == null ? 'kosong' : $item['harga'] }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $data == null ? 'kosong' : $item['jumlah'] }}
-                                                        </td>
-                                                        <td>
-
-                                                            {{ $item['total'] }}
-
-                                                        </td>
-                                                        <td>
-                                                            <div class="conbtn">
-                                                                <button class="btn btn-primary center fa fa-edit"
-                                                                    data-toggle="modal" data-target="#edit"
-                                                                    onclick='edit_data(@json($item),{{ $loop->index }})'></button>
+                                                            <form method="POST"
+                                                                action="{{ route('jualbeli.destroy', ['jualbeli' => $item->id]) }}"
+                                                                class="form-horizontal" role="form">
+                                                                @method('delete')
+                                                                @csrf
                                                                 <button class="btn btn-danger center fa fa-trash"
                                                                     style="margin-left: 2%"></button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            @endisset
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -139,21 +141,20 @@
 
                             </div>
                             <hr>
-
                             <div class="row mt-2">
                                 <div class="col-md-8">
                                     <label class="col-md-3 control-label">Total Transaksi</label>
                                     <div class="col-md-5">
-                                        <input id="totaltr" name="totaltransaksi" data-parsley-type="number"
-                                            type="text" disabled="disabled" class="form-control" placeholder="0"
-                                            value="{{ $total }}" required>
+                                        <input id="totaltr" data-parsley-type="number" type="text" disabled="disabled"
+                                            class="form-control" placeholder="0"
+                                            value="{{ $transaksi->jualbeli->sum('total') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-8 m-t-5">
                                     <label class="col-md-3 control-label">Dibayarkan</label>
                                     <div class="col-md-5">
-                                        <input id="totalbyr" data-parsley-type="number" type="text" class="form-control"
-                                            placeholder="Total BUMDes Membayar" required>
+                                        <input id="totalbyr" data-parsley-type="number" type="text"
+                                            class="form-control" placeholder="Total BUMDes Membayar" required>
                                     </div>
 
                                     <button class="btn btn-primary center m-l-5" style="display: inline;"
@@ -164,18 +165,26 @@
                                 <hr style="border-color: black;">
                             </div>
 
-
                             <div class="row mt-2">
                                 <div class="col-md-8">
-                                    <label class="col-md-3 control-label">Sisa </label>
-                                    <div class="col-md-5">
-                                        <input id="hasil" data-parsley-type="number" type="text"
-                                            disabled="disabled" class="form-control" placeholder="0" value="0"
-                                            required>
-                                    </div>
+                                    <form action="{{ route('hutang.store') }}" method="post" class="form-horizontal"
+                                        role="form">
+                                        @csrf
 
-                                    <button class="btn btn-primary center m-l-5" style="display: inline;"
-                                        data-target="#bayar" onclick="">Simpan</button>
+                                        <input type="hidden" name="id_transaksi" value="{{ $transaksi->id }}">
+                                        <input type="hidden" name="bayar" id="bayar" value="" required>
+
+                                        <label class="col-md-3 control-label">Sisa </label>
+                                        <div class="col-md-5">
+                                            <input name="sisa" id="hasil" data-parsley-type="number"
+                                                type="text" class="form-control" placeholder="0"
+                                                value="{{ $transaksi->hutang->last()->sisa ?? 0 }}" required readonly>
+                                        </div>
+
+                                        <button class="btn btn-primary center m-l-5"
+                                            style="display: inline;">Simpan</button>
+
+                                    </form>
                                 </div>
                             </div>
 
@@ -200,18 +209,18 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Barang</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('post.notapembelian') }}" class="form-horizontal"
-                        role="form">
+                    <form method="POST" action="{{ Route('jualbeli.store') }}" class="form-horizontal" role="form">
                         @csrf
+                        <input type="hidden" name="id_transaksi" value="{{ $transaksi->id }}">
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Jenis/Nama Barang</label>
                             <div class="col-sm-8">
-                                <select name="nama" class="form-control" required>
-                                    @if (isset($listbarang[$pembelian[$loc]['pemasok']]) > 0)
-                                        @foreach ($listbarang[$pembelian[$loc]['pemasok']]['detil'] as $item)
-                                            <option value="{{ $item['nama'] }}">{{ $item['nama'] }}</option>
+                                <select name="id_barang" class="form-control" required>
+                                    @if (count($barang) > 0)
+                                        @foreach ($barang as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                         @endforeach
-                                        @else
+                                    @else
                                         <option>Barang kosong</option>
                                     @endif
                                 </select>
@@ -227,15 +236,18 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Jumlah</label>
                             <div class="col-md-8">
-                                <input name="jumlah" data-parsley-type="number" type="text" class="form-control"
+                                <input name="kuantitas" data-parsley-type="number" type="text" class="form-control"
                                     placeholder="Jumlah Barang" required>
                             </div>
                         </div>
                         <div class="modal-footer">
+                            <form action="" method="post" class="form-horizontal" role="form">
+                                @csrf
 
-                            <button type="button" class="btn btn-default waves-effect m-l-5"
-                                data-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary waves-effect waves-light">Simpan</button>
+                                <button type="button" class="btn btn-default waves-effect m-l-5"
+                                    data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary waves-effect waves-light">Simpan</button>
+                            </form>
                         </div>
                     </form>
                 </div>
@@ -254,32 +266,34 @@
                     <h4 class="modal-title" id="myModalLabel">Edit Nota Transaksi Jasa</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('post.editnotapembelian') }}" method="POST" class="form-horizontal"
-                        role="form" enctype="multipart/form-data">
+                    <form action="" id="edit_url" method="POST" class="form-horizontal" role="form"
+                        enctype="multipart/form-data">
+                        @method('put')
                         @csrf
-                        <input type="hidden" name="id" id="edit_id">
 
-                        {{-- <div class="form-group">
+                        <div class="form-group">
                             <label class="col-sm-4 control-label">Jenis Usaha Jasa</label>
                             <div class="col-sm-8">
-                                <select id="edit_jenis" name="jenis" class="form-control" required>
-                                    @foreach ($usaha[$pembelian[$loc]['usaha']]['jenis'] as $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
+                                <select id="edit_jenis" class="form-control" required disabled>
+                                    @foreach ($barang as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                        </div> --}}
+                        </div>
+
                         <div class="form-group">
                             <label class="col-md-4 control-label">Harga</label>
                             <div class="col-md-8">
-                                <input name="harga" id="edit_harga" data-parsley-type="number" type="text" class="form-control"
-                                    placeholder="Harga Jasa" id="edit_harga" required>
+                                <input name="harga" id="edit_harga" data-parsley-type="number" type="text"
+                                    class="form-control" placeholder="Harga Jasa" id="edit_harga" required>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label class="col-md-4 control-label">Jumlah</label>
                             <div class="col-md-8">
-                                <input name="jumlah" data-parsley-type="number" type="text" class="form-control"
+                                <input name="kuantitas" data-parsley-type="number" type="text" class="form-control"
                                     placeholder="Jumlah atau Berapa Kali Jasa" id="edit_jumlah" required>
                             </div>
                         </div>
@@ -303,14 +317,25 @@
         function bayar() {
             totaltr = document.getElementById("totaltr").value;
             totalbyr = document.getElementById("totalbyr").value;
+            document.getElementById("bayar").value = totalbyr;
             document.getElementById("hasil").value = totalbyr - totaltr;
         }
 
-        function edit_data(data, id) {
-            document.getElementById("edit_id").value = id;
-            document.getElementById("edit_jumlah").value = data['jumlah'];
-            document.getElementById("edit_harga").value = data['harga'];
-            // document.getElementById("edit_jumlah").value = data['jumlah'];
+        function edit_data(url, barang, harga, kuantitas) {
+            document.getElementById("edit_url").action = url;
+            document.getElementById("edit_jumlah").value = kuantitas;
+            document.getElementById("edit_harga").value = harga;
+            var selbarang = document.getElementById("edit_jenis");
+            setSelectedValue(selbarang, barang);
+        }
+
+        function setSelectedValue(selectObj, valueToSet) {
+            for (var i = 0; i < selectObj.options.length; i++) {
+                if (selectObj.options[i].text == valueToSet) {
+                    selectObj.options[i].selected = true;
+                    return;
+                }
+            }
         }
     </script>
 @endsection

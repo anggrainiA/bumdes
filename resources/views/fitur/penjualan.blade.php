@@ -49,37 +49,41 @@
 
 
                                         <tbody>
-                                            @foreach ($data as $item)
+                                            @foreach ($transaksi as $item)
                                                 <tr>
                                                     <td>
                                                         <div class="conbtn">
-                                                            {{ $loop->index + 1 }}
+                                                            {{ $loop->iteration }}
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        {{ $data == null ? 'kosong' : $item['tanggal'] }}
+                                                        {{-- {{ $data == null ? 'kosong' : $item['tanggal'] }} --}}
+                                                        {{ $item->tanggal }}
                                                     </td>
                                                     <td>
-                                                        {{ '0001' }}
+                                                        {{ $item->id }}
                                                         <!-- Perlu dibahas kodenya gmn -->
                                                     </td>
                                                     <td>
-                                                        {{ $data == null ? 'kosong' : $dagang[$item['usaha']]['namadagang'] }}
+                                                        {{-- {{ $data == null ? 'kosong' : $dagang[$item['usaha']]['namadagang'] }} --}}
+                                                        {{ $item->usaha->nama }}
                                                     </td>
                                                     <td>
-                                                        {{ $data == null ? 'kosong' : $pelanggan[$item['pelanggan']]['nama'] }}
+                                                        {{-- {{ $data == null ? 'kosong' : $pelanggan[$item['pelanggan']]['nama'] }} --}}
+                                                        {{ $item->orang->nama }}
                                                     </td>
                                                     <td>
-                                                        {{ $data == [] ? 'kosong' : $item['penghasilan'] }}
+                                                        {{-- {{ $data == [] ? 'kosong' : $item['penghasilan'] }} --}}
+                                                        {{ 0 }}
                                                     </td>
                                                     <td>
                                                         {{-- {{$data ==[] ? 'kosong' : $item['penghasilan']}} --}}
-                                                        <div class="conbtn">
+                                                        {{-- <div class="conbtn">
                                                             <img src="images/{{ $item['file'] }}" alt="nota"
                                                                 onclick="edit('images/{{ $item['file'] }}',{{ $loop->index }})"
                                                                 data-toggle="modal" data-target="#gambar"
                                                                 style="width: 30px; height: 30px;">
-                                                        </div>
+                                                        </div> --}}
 
                                                         {{-- {{"Rp200,000"}} --}}
                                                     </td>
@@ -87,12 +91,20 @@
                                                         <div class="conbtn">
                                                             <button class="btn btn-primary center fa fa-edit"
                                                                 data-toggle="modal" data-target="#edit"
-                                                                onclick='edit_data(@json($item),{{ $loop->index }})'></button>
-                                                            <button class="btn btn-danger center fa fa-trash"
-                                                                style="margin-left: 2%"></button>
+                                                                onclick="edit_data('{{ Route('transaksi.update', ['transaksi' => $item->id]) }}', '{{ $item->tanggal }}', '{{ $item->orang->nama }}', '{{ $item->usaha->nama }}', '{{ $item->keterangan }}')"></button>
+
+                                                            <form method="POST"
+                                                                action="{{ route('transaksi.destroy', ['transaksi' => $item->id]) }}"
+                                                                class="form-horizontal" role="form">
+                                                                @method('delete')
+                                                                @csrf
+                                                                <button class="btn btn-danger center fa fa-trash"
+                                                                    style="margin-left: 2%"></button>
+                                                            </form>
+
                                                             <button class="btn btn-success center mdi mdi-eye"
                                                                 style="margin-left: 2%"
-                                                                onclick="window.location.href='{{ route('get.notapenjualan') }}?id={{ $loop->index }}'">
+                                                                onclick="window.location.href='{{ route('transaksi.show', ['transaksi' => $item->id]) }}'">
                                                                 Detail</button>
                                                         </div>
                                                     </td>
@@ -123,9 +135,10 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Transaksi</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('post.penjualan') }}" method="POST" class="form-horizontal" role="form"
+                    <form action="{{ route('transaksi.store') }}" method="POST" class="form-horizontal" role="form"
                         enctype="multipart/form-data">
                         @csrf
+                        <input type="hidden" name="status" value="penjualan">
                         <div class="form-group">
                             <label class="col-md-4 control-label">Tanggal</label>
                             <div class="col-md-8">
@@ -141,9 +154,9 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Nama Usaha</label>
                             <div class="col-sm-8">
-                                <select name="usaha" class="form-control" required>
-                                    @foreach ($dagang as $item)
-                                        <option value="{{ $loop->index }}">{{ $item['namadagang'] }}</option>
+                                <select name="id_usaha" class="form-control" required>
+                                    @foreach ($usaha as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -152,9 +165,9 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Nama Pelanggan</label>
                             <div class="col-sm-8">
-                                <select name="pelanggan" class="form-control" required>
+                                <select name="id_orang" class="form-control" required>
                                     @foreach ($pelanggan as $item)
-                                        <option value="{{ $loop->index }}">{{ $item['nama'] }}</option>
+                                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -163,7 +176,7 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Catatan Transaksi</label>
                             <div class="col-md-8">
-                                <input name="catatan" type="text" class="form-control"
+                                <input name="keterangan" type="text" class="form-control"
                                     placeholder="Catatan Transaksi (bisa saja kosong)">
                             </div>
                         </div>
@@ -171,7 +184,8 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Bukti Transaksi</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="file" type="file" id="file" onchange="validateFile()" required />
+                                <input class="form-control" name="file" type="file" id="file"
+                                    onchange="validateFile()" />
                             </div>
                         </div>
 
@@ -198,10 +212,11 @@
                     <h4 class="modal-title" id="myModalLabel">Edit Transaksi Penjualan</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('post.editpenjualan') }}" method="POST" class="form-horizontal"
-                        role="form" enctype="multipart/form-data">
+                    <form action="" id="edit_url" method="POST" class="form-horizontal" role="form"
+                        enctype="multipart/form-data">
+                        @method('put')
                         @csrf
-                        <input type="hidden" name="id" id="edit_id">
+
                         <div class="form-group">
                             <label class="col-md-4 control-label">Tanggal</label>
                             <div class="col-md-8">
@@ -217,9 +232,9 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Nama Usaha</label>
                             <div class="col-sm-8">
-                                <select id="edit_usah" name="usaha" class="form-control" required>
-                                    @foreach ($dagang as $item)
-                                        <option value="{{ $loop->index }}">{{ $item['namadagang'] }}</option>
+                                <select id="edit_usaha" name="id_usaha" class="form-control" required>
+                                    @foreach ($usaha as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -228,9 +243,9 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Nama Pelanggan</label>
                             <div class="col-sm-8">
-                                <select id="edit_pelang" name="pelanggan" class="form-control" required>
+                                <select id="edit_pelanggan" name="id_orang" class="form-control" required>
                                     @foreach ($pelanggan as $item)
-                                        <option value="{{ $loop->index }}">{{ $item['nama'] }}</option>
+                                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -239,7 +254,7 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Catatan Transaksi</label>
                             <div class="col-md-8">
-                                <input id="edit_catat" name="catatan" type="text" class="form-control"
+                                <input id="edit_catat" name="keterangan" type="text" class="form-control"
                                     placeholder="Catatan Transaksi (bisa saja kosong)">
                             </div>
                         </div>
@@ -267,7 +282,7 @@
                     <h4 class="modal-title" id="myModalLabel">Bukti Transaksi</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('post.penjualan') }}" method="POST" class="form-horizontal" role="form"
+                    <form action="" method="POST" class="form-horizontal" role="form"
                         enctype="multipart/form-data">
                         @csrf
                         <div class="conbtn">
@@ -281,8 +296,8 @@
 
                             <div class="col-md-10">
                                 <div class="input-group ">
-                                    <input name="file" type="file" id="file" class="form-control" onchange="validateFile()"
-                                        required>
+                                    <input name="file" type="file" id="file" class="form-control"
+                                        onchange="validateFile()" required>
                                     <span class="input-group-addon bg-custom b-0"><i
                                             class="mdi mdi-calendar text-white"></i></span>
                                 </div><!-- input-group -->
@@ -308,13 +323,24 @@
             document.getElementById("gambar_src").src = gambar;
         }
 
-        function edit_data(data, id) {
-            console.log('editdata: ' + data['tanggal']);
-            document.getElementById("edit_id").value = id;
-            document.getElementById("edit_usah").value = data['usaha'];
-            document.getElementById("datepicker-autoclose2").value = data['tanggal'];
-            document.getElementById("edit_pelang").value = data['pelanggan'];
-            document.getElementById("edit_catat").value = data['catatan'];
+        function edit_data(url, tanggal, orang, usaha, keterangan) {
+            document.getElementById("edit_url").action = url;
+            document.getElementById("datepicker-autoclose2").value = tanggal;
+            document.getElementById("edit_catat").value = keterangan;
+
+            var selpelanggan = document.getElementById("edit_pelanggan");
+            var selusaha = document.getElementById("edit_usaha");
+            setSelectedValue(selpelanggan, orang);
+            setSelectedValue(selusaha, usaha);
+        }
+
+        function setSelectedValue(selectObj, valueToSet) {
+            for (var i = 0; i < selectObj.options.length; i++) {
+                if (selectObj.options[i].text == valueToSet) {
+                    selectObj.options[i].selected = true;
+                    return;
+                }
+            }
         }
 
         function validateFile() {
@@ -322,7 +348,7 @@
             if (input.files.length > 0) {
                 var file = input.files[0];
                 if (file.type.match(/image\/.*/)) {
-                    if (file.size <= (1048576*2)) {
+                    if (file.size <= (1048576 * 2)) {
                         // file is a valid image and its size is under 1MB
                     } else {
                         alert("Ukuran file terlalu besar. Maksimum ukuran 2MB.");

@@ -1,12 +1,14 @@
 <?php
 
 namespace Database\Seeders;
+
+use App\Models\Orang;
+use App\Models\Usaha;
+use App\Models\Bumdes;
 use App\Models\Pengelola;
-use App\Models\ProfilBumdes;
-use App\Models\Pelanggan;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -17,43 +19,32 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Pengelola::create([
-            'nama'=>'bayu',
-            'id'=>Str::random(30),
-            'status'=>'Ketua',
-            'no_telp'=>'414123',
-            'alamat'=>'w',
-            'foto'=>'w',
-            'password'=>Hash::make('user1234'),
+            'nama' => 'bayu',
+            'username' => 'bayu',
+            'password' => Hash::make('123456789'),
+            'status' => 'ketua',
         ]);
+
         Pengelola::create([
-            'nama'=>'anggi',
-            'id'=>Str::random(30),
-            'status'=>'Bendahara',
-            'no_telp'=>'11111',
-            'alamat'=>'w',
-            'foto'=>'w',
-            'password'=>Hash::make('user1234'),
+            'nama' => 'baya',
+            'username' => 'baya',
+            'password' => Hash::make('123456789'),
+            'status' => 'bendahara',
         ]);
+
         Pengelola::create([
-            'nama'=>'anggi1',
-            'id'=>Str::random(30),
-            'status'=>'Accounting',
-            'no_telp'=>'11111',
-            'alamat'=>'w',
-            'foto'=>'w',
-            'password'=>Hash::make('user1234'),
+            'nama' => 'bayi',
+            'username' => 'bayi',
+            'password' => Hash::make('123456789'),
+            'status' => 'accounting',
         ]);
-        profilbumdes::create([
-            'id'=>Str::random(30),
-            'nama'=>'bayu',
-            'alamat'=>'w',
-            'foto'=>'w',
+
+        Bumdes::create([
+            'nama' => 'percobaan',
+            'alamat' => 'tidak tau dimana',
         ]);
-        Pelanggan::create([
-            'id'=>Str::random(30),
-            'nama'=>'Default',
-            'kontak'=>'00',
-            'alamat'=>'00',
-        ]);
+
+        Usaha::factory(10)->create();
+        Orang::factory(10)->create();
     }
 }

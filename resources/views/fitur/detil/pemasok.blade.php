@@ -10,7 +10,7 @@
                     <div class="page-header-title">
                         <ol class="breadcrumb pull-right">
                             <li><a href="#">Master Data</a></li>
-                            <li><a href="{{ route('get.pemasok') }}">Pemasok</a></li>
+                            <li><a href="">Pemasok</a></li>
                             <li class="active">Daftar Barang</li>
                         </ol>
                         <div class="clearfix"></div>
@@ -24,7 +24,6 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h3 class="panel-title">Daftar Barang</h3>
-
                         </div>
 
                         <div class="panel-body">
@@ -35,43 +34,43 @@
                                         <div class="col-sm-6 col-xs-12">
                                             <div class="m-t-5">
                                                 <form class="form" role="form">
-                                                
-                                                            <div class="form-group">
-                                                                <label class="control-label">Total Jenis Barang</label>
-                                                                <div class="">
-                                                                    <input type="text" class="form-control"
-                                                                        disabled="disabled" value="{{ 1 }}">
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="control-label">Nama Pemasok</label>
-                                                                <div class="">
-                                                                    <input type="text" class="form-control"
-                                                                        disabled="disabled" value="{{ $pemasok[$loc]['nama']}}">
-                                                                </div>
-                                                            </div>
 
-                                                    </form>
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Total Jenis Barang</label>
+                                                        <div class="">
+                                                            <input type="text" class="form-control" disabled="disabled"
+                                                                value="{{ count($pemasok->barang) }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Nama Pemasok</label>
+                                                        <div class="">
+                                                            <input type="text" class="form-control" disabled="disabled"
+                                                                value="{{ $pemasok->nama }}">
+                                                        </div>
+                                                    </div>
+
+                                                </form>
                                             </div>
-                                            <div class="col-sm-6 col-xs-12">
-                                                <div class="m-t-5">
-                                                    <form class="form" role="form">
-                                                        <div class="form-group">
-                                                            <label class="control-label">Nomor Telepon</label>
-                                                            <div class="">
-                                                                <input type="text" class="form-control" disabled="disabled"
-                                                                    value="{{ $pemasok[$loc]['nohp']}}">
-                                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12">
+                                            <div class="m-t-5">
+                                                <form class="form" role="form">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Nomor Telepon</label>
+                                                        <div class="">
+                                                            <input type="text" class="form-control" disabled="disabled"
+                                                                value="{{ $pemasok->kontak }}">
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label class="control-label">Alamat Pemasok</label>
-                                                            <div class="">
-                                                                <input type="text" class="form-control" disabled="disabled"
-                                                                    value="{{ $pemasok[$loc]['alamat']}}">
-                                                            </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Alamat Pemasok</label>
+                                                        <div class="">
+                                                            <input type="text" class="form-control" disabled="disabled"
+                                                                value="{{ $pemasok->alamat }}">
                                                         </div>
-                                                        
+                                                    </div>
+
                                                 </form>
                                             </div>
                                         </div>
@@ -94,32 +93,43 @@
 
 
                                         <tbody>
-                                            @isset($data[$loc]['detil'])
-                                                @foreach ($data[$loc]['detil'] as $item)
-                                                    <tr>
-                                                        <td>
-                                                            <div class="conbtn">
-                                                                {{ $loop->index + 1 }}
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            {{ 11011011 }}
-                                                            {{-- Kode ni, harus dibahas --}}
-                                                        </td>
-                                                        <td>
-                                                            {{ $data == null ? 'kosong' : $item['nama'] }}
-                                                        </td>
-                                                        <td>
-                                                            <div class="conbtn">
-                                                                <button class="btn btn-primary center fa fa-edit"
-                                                                    data-toggle="modal" data-target="#edit" onclick='edit_data(@json($item),{{$loop->index}})'></button>
+                                            @foreach ($pemasok->barang as $item)
+                                                <tr>
+                                                    <td>
+                                                        <div class="conbtn">
+                                                            {{ $loop->iteration }}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        {{ $item->id }}
+                                                        {{-- Kode ni, harus dibahas --}}
+                                                    </td>
+                                                    <td>
+                                                        {{ $item->nama }}
+                                                    </td>
+                                                    <td>
+                                                        <div class="conbtn">
+                                                            <button class="btn btn-primary center fa fa-edit"
+                                                                data-toggle="modal" data-target="#edit"
+                                                                onclick="edit_data('{{ $item->nama }}', '{{ route('barangorang.update', ['barangorang' => $item->id]) }}')"></button>
+
+                                                            <form method="POST"
+                                                                action="{{ route('barangorang.destroy', ['barangorang' => $pemasok->id]) }}"
+                                                                class="form-horizontal" role="form">
+                                                                @method('delete')
+                                                                @csrf
+
+                                                                <input type="hidden" name="id_barang"
+                                                                    value="{{ $item->id }}">
+
                                                                 <button class="btn btn-danger center fa fa-trash"
                                                                     style="margin-left: 2%"></button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            @endisset
+                                                            </form>
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -145,13 +155,24 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Data Barang</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('post.detilpemasok') }}" class="form-horizontal" role="form">
+                    <form method="POST" action="{{ route('barangorang.store') }}" class="form-horizontal"
+                        role="form">
                         @csrf
+
+                        <input type="hidden" value="{{ $pemasok->id }}" name="id_orang">
+
                         <div class="form-group">
-                            <label class="col-md-4 control-label">Nama Barang</label>
-                            <div class="col-md-8">
-                                <input name="nama" type="text" class="form-control" placeholder="Nama Barang"
-                                    required>
+                            <label class="col-sm-4 control-label">Nama Barang</label>
+                            <div class="col-sm-8">
+                                <select name="id_barang" class="form-control" required>
+                                    @if (count($barang) > 0)
+                                        @foreach ($barang as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                        @endforeach
+                                    @else
+                                        <option>Barang kosong</option>
+                                    @endif
+                                </select>
                             </div>
                         </div>
 
@@ -178,9 +199,9 @@
                 </div>
                 <div class="modal-body">
 
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('post.editdetilpemasok') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="" id="edit_form">
+                        @method('put')
                         @csrf
-                        <input type="hidden" id="edit_id" name="id">
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nama Barang</label>
                             <div class="col-md-8">
@@ -206,11 +227,10 @@
 
 @section('script')
     <script>
-
-        function edit_data(data,id) {
-            console.log('editdata: ' + data['nama']);
-            document.getElementById("edit_id").value = id;
-            document.getElementById("edit_nama").value = data['nama'];
+        function edit_data(nama, url) {
+            // console.log('editdata: ' + url);
+            document.getElementById("edit_form").action = url;
+            document.getElementById("edit_nama").value = nama;
         }
     </script>
 @endsection

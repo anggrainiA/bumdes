@@ -2,17 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PengelolaController;
-use App\Http\Controllers\DataAkunController;
-use App\Http\Controllers\DataHutangController;
-use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\UsahaController;
+use App\Http\Controllers\BarangController;
+use App\Http\Controllers\BumdesController;
 use App\Http\Controllers\PemasokController;
+use App\Http\Controllers\DataAkunController;
+use App\Http\Controllers\JualbeliController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\PembelianController;
+use App\Http\Controllers\PengelolaController;
+use App\Http\Controllers\PenjualanController;
+use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\DataHutangController;
+use App\Http\Controllers\BarangorangController;
+use App\Http\Controllers\HutangController;
 use App\Http\Controllers\ProfilBumdesController;
 use App\Http\Controllers\ProfilPengelolaController;
-use App\Http\Controllers\UsahaJasaController;
-use App\Http\Controllers\JenisPendapatanController;
-use App\Http\Controllers\TransaksiJasaController;
+use App\Http\Controllers\PendapatanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,54 +32,38 @@ use App\Http\Controllers\TransaksiJasaController;
 |
 */
 
-
-Route::get('/',  [LoginController::class, 'index'])->name('login');
-Route::post('/login',  [LoginController::class, 'login'])->name('authenticate');
-Route::post('/logout',  [LoginController::class, 'logout'])->name('logout')->middleware('auth');
-Route::resource('/pelanggan', PelangganController::class,)->except(['create', 'edit', 'show']);
-
-Route::get('/Dashboard',  [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 Route::get('/profilPengelola',  [ProfilPengelolaController::class, 'index'])->name('profilpengelola')->middleware('auth');
 Route::post('/profilPengelola/update',  [ProfilPengelolaController::class, 'update'])->name('updateprofilpengelola')->middleware('auth');
 Route::post('/profilPengelola/UpdateProfil',  [ProfilPengelolaController::class, 'updateGambar'])->name('updateGambarProfil')->middleware('auth');
 
+// Route::get('/Profil',  [ProfilController::class, 'index'])->name('dashboard')->middleware('auth');
 
 Route::group(['prefix' => 'Master Data', 'middleware' => ['auth','Role:Ketua,Bendahara'] ],function () {
-    Route::get('/Pengelola',  [PengelolaController::class, 'index'])->name('pengelola');
     Route::get('/Data Akun',  [DataAkunController::class, 'index'])->name('dataakun');
 });
-Route::group(['prefix' => 'Master Data', 'middleware' => ['auth','Role:Ketua' ]], function () {
-    // pemasok
-    Route::get('/pemasok', [PemasokController::class, 'pemasok'])->name('pemasok');
-    Route::post('/pemasok', [PemasokController::class, 'store'])->name('post.pemasok');
-    Route::get('/pemasok/show/{id}', [PemasokController::class, 'show']);
-    Route::put('/pemasok', [PemasokController::Class, 'update'])->name('post.edit');
-    Route::delete('/pemasok/{pemasok}', [PemasokController::Class, 'destroy']);
 
-    
-    Route::get('/Pelanggan',  [PelangganController::class, 'index'])->name('pelanggan');
-    Route::get('/Data Hutang',  [DataHutangController::class, 'index'])->name('datahutang');
-    // profil bumdes
-    Route::get('/ProfilBumdes',  [ProfilBumdesController::class, 'index'])->name('profilbumdes');
-    Route::post('/ProfilBumdes/Update',  [ProfilBumdesController::class, 'update'])->name('updateprofilbumdes');
-    Route::post('/ProfilBumdes/UpdateGambar/{id}',  [ProfilBumdesController::class, 'updateGambar'])->name('updategambarprofilbumdes');
-        //usaha jasa di profil bumdes
-        Route::post('/ProfilBumdes/TambahUsahaJasa',  [UsahaJasaController::class, 'tambahusahajasa'])->name('usahajasatambah');
-        Route::post('/ProfilBumdes/TambahJenisPendapatan/',  [JenisPendapatanController::class, 'tambah'])->name('jenispendapatantambah');
-        Route::post('/ProfilBumdes/DeleteJenisPendapatan/{id}',  [JenisPendapatanController::class, 'delete'])->name('jenispendapatandelete');
-    //insert
-    Route::post('/Pengelola/Tambah',  [PengelolaController::class, 'tambah'])->name('tambahPengelola');
-    Route::post('/Pengelola/Edit',  [PengelolaController::class, 'edit'])->name('editpengelola');
-    Route::post('/Pengelola/Delete/{id}',  [PengelolaController::class, 'delete'])->name('deletePengelola');
-});
-Route::group(['prefix' => 'Jasa' ],function () {
+Route::get('/', function () { return redirect()->route('login'); });
+Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
+Route::post('/login', [LoginController::class, 'authenticate'])->name('authenticate');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
-    Route::get('/Transaksi Jasa',  [TransaksiJasaController::class, 'index'])->name('transaksijasa');
-    Route::post('/Transaksi Jasa/Tambah',  [TransaksiJasaController::class, 'tambah'])->name('transaksijasatambah');
-    Route::post('/Transaksi Jasa/UpdateGambar',  [TransaksiJasaController::class, 'updateGambar'])->name('updategambartransaksi');
-    Route::post('/Transaksi Jasa/UpdateTransaksi',  [TransaksiJasaController::class, 'editTransaksi'])->name('edittransaksijasa');
-    Route::post('/Transaksi Jasa/UpdateTransaksi/{id}',  [TransaksiJasaController::class, 'delete'])->name('deletetransaksijasa');
-    Route::get('/Transaksi Jasa/Detail/{id}',  [TransaksiJasaController::class, 'detail'])->name('detailtransaksijasa');
-    // Route::get('/Data Akun',  [DataAkunController::class, 'index'])->name('dataakun');
-});
-// , 'middleware' => ['auth','Role:Accounting']
+
+Route::get('/dashboard', function () {
+    return view('fitur.dashboard');
+})->name('dashboard');
+
+Route::resource('/bumdes', BumdesController::class)->only(['index', 'update']);
+Route::resource('/usaha', UsahaController::class)->except(['index', 'create', 'edit']);
+Route::resource('/pengelola', PengelolaController::class)->except(['create', 'edit']);
+Route::resource('/hutang', HutangController::class);
+Route::resource('/pemasok', PemasokController::class)->except(['create', 'edit']);
+Route::resource('/pelanggan', PelangganController::class)->except(['create', 'show', 'edit']);
+Route::resource('/barang', BarangController::class)->except(['create', 'edit']);
+Route::resource('/barangorang', BarangorangController::class)->only(['store', 'update', 'destroy']);
+Route::resource('/jualbeli', JualbeliController::class)->only(['store', 'update', 'destroy']);
+Route::resource('/transaksi', TransaksiController::class)->except(['create', 'edit']);
+Route::resource('/pendapatan', PendapatanController::class);
+
+
+// Route::group(['middleware' => ['auth']], function () {
+// });

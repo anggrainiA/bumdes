@@ -2,25 +2,24 @@
 
 
 @section('content')
-
     <div class="content">
         <div class="container">
 
             <!-- Page-Title -->
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="page-header-title">
-                    <h4 class="pull-left page-title">Pemasok</h4>
-                    {{-- <ol class="breadcrumb pull-right">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-header-title">
+                        <h4 class="pull-left page-title">Pemasok</h4>
+                        {{-- <ol class="breadcrumb pull-right">
                         <li class="active">Dashboard</li>
                     </ol> --}}
-                    <div class="clearfix"></div>
+                        <div class="clearfix"></div>
+                    </div>
                 </div>
-            </div>
-            @if(session()->has('success'))
-    {{session('success')}}
-        @endif
-        {{-- @error('nama')
+                @if (session()->has('success'))
+                    {{ session('success') }}
+                @endif
+                {{-- @error('nama')
         {{$message}}
         @enderror
         @error('kontak')
@@ -29,7 +28,7 @@
         @error('alamat')
         {{$message}}
         @enderror --}}
-        </div>
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-primary">
@@ -58,50 +57,54 @@
 
 
                                         {{-- <tbody>
-                                            @foreach ($data as $pemasok )
+                                            @foreach ($data as $pemasok)
                                             <p>{{$pemasok}}</p>
                                             @endforeach --}}
-                                            @foreach ($pemasok as $item)
-                                                <tr>
-                                                    <td>
-                                                        <div class="conbtn">
-                                                            {{ $loop->iteration }}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        {{$item->nama}}
-                                                        {{-- {{ $data == null ? 'kosong' : $item['nama'] }} --}}
-                                                    </td>
-                                                    <td>
-                                                        {{$item->kontak}}
-                                                        {{-- {{ $item == null ? 'kosong' : $item['kontak'] }} --}}
-                                                    </td>
-                                                    <td>
-                                                        {{$item->alamat}}
-                                                        {{-- {{ $data == null ? 'kosong' : $item['alamat'] }} --}}
-                                                    </td>
-                                                    <td>
+                                        @foreach ($pemasok as $item)
+                                            <tr>
+                                                <td>
+                                                    <div class="conbtn">
+                                                        {{ $loop->iteration }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    {{ $item->nama }}
+                                                    {{-- {{ $data == null ? 'kosong' : $item['nama'] }} --}}
+                                                </td>
+                                                <td>
+                                                    {{ $item->kontak }}
+                                                    {{-- {{ $item == null ? 'kosong' : $item['kontak'] }} --}}
+                                                </td>
+                                                <td>
+                                                    {{ $item->alamat }}
+                                                    {{-- {{ $data == null ? 'kosong' : $item['alamat'] }} --}}
+                                                </td>
+                                                <td>
+                                                    <div class="conbtn">
+                                                        <button class="btn btn-primary center fa fa-edit"
+                                                            data-toggle="modal" data-target="#edit"
+                                                            onclick="edit_data('{{ $item->nama }}', '{{ $item->kontak }}', '{{ $item->alamat }}', '{{ route('pemasok.update', ['pemasok' => $item->id]) }}')">
+                                                        </button>
 
-                                                         <div class="conbtn">
-                                                            <button class="btn btn-primary center fa fa-edit"
-                                                                data-toggle="modal" data-target="#edit"
-                                                                onclick="edit_data('{{ $item->nama }}', '{{ $item->kontak}}', '{{ $item->alamat}}', '/pemasok/{{$item->id}}')"></button>
-                                                                <form method="POST" action= "{{route('post.edit')}}" class="form-horizontal" role="form">
-                                                                   {{-- @method('delete') --}}
-                                                                    @csrf
-                                                                    {{-- "/pemasok/{{$item->id}} --}}
+                                                        <form method="POST"
+                                                            action="{{ route('pemasok.destroy', ['pemasok' => $item->id]) }}"
+                                                            class="form-horizontal" role="form">
+                                                            @method('delete')
+                                                            @csrf
+                                                            {{-- "/pemasok/{{$item->id}} --}}
 
-                                                                    <button class="btn btn-danger center fa fa-trash"
+                                                            <button class="btn btn-danger center fa fa-trash"
                                                                 style="margin-left: 2%"></button>
-                                                                </form>
-                                                            <button class="btn btn-success center mdi mdi-eye"
-                                                                style="margin-left: 2%"
-                                                                onclick="window.location.href='/pemasok/show/{{ $item->id }}'">
-                                                                Barang</button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
+                                                        </form>
+
+                                                        <button class="btn btn-success center mdi mdi-eye"
+                                                            style="margin-left: 2%"
+                                                            onclick="window.location.href='{{ route('pemasok.show', ['pemasok' => $item->id]) }}'">
+                                                            Barang</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                         </tbody>
                                     </table>
 
@@ -127,8 +130,9 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Data Pemasok</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('post.pemasok') }}" class="form-horizontal" role="form">
+                    <form method="POST" action="{{ route('pemasok.store') }}" class="form-horizontal" role="form">
                         @csrf
+                        <input type="hidden" name="status" value="pemasok">
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nama Pemasok</label>
                             <div class="col-md-8">
@@ -140,8 +144,8 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nomor Telepon</label>
                             <div class="col-md-8">
-                                <input name="kontak" data-parsley-type="number" type="text" class="form-control" id="kontak"
-                                    placeholder="08XXXXXXXXXX" required />
+                                <input name="kontak" data-parsley-type="number" type="text" class="form-control"
+                                    id="kontak" placeholder="08XXXXXXXXXX" required />
                             </div>
                         </div>
 
@@ -167,7 +171,8 @@
     </div><!-- /.modal -->
 
     <!-- sample modal edit -->
-    <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -176,8 +181,7 @@
                 </div>
                 <div class="modal-body">
 
-                    <form action="" method="POST" class="form-horizontal"
-                        role="form" id="form_update">
+                    <form action="" method="POST" class="form-horizontal" role="form" id="form_update">
                         @method('put')
                         @csrf
                         {{-- <input type="hidden" name="id" id="id_p"> --}}
@@ -192,16 +196,16 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nomor Telepon</label>
                             <div class="col-md-8">
-                                <input name="kontak" id="edit_kontak" data-parsley-type="number" type="text" class="form-control"
-                                placeholder="08XXXXXXXXXX" required />
+                                <input name="kontak" id="edit_kontak" data-parsley-type="number" type="text"
+                                    class="form-control" placeholder="08XXXXXXXXXX" required />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-4 control-label">Alamat Pemasok</label>
                             <div class="col-md-8">
-                                <input name="alamat" id="edit_alamat" type="text" class="form-control" id="alamat"
-                                    placeholder="Alamat Pemasok atau Alamat Perusahaannya" required>
+                                <input name="alamat" id="edit_alamat" type="text" class="form-control"
+                                    id="alamat" placeholder="Alamat Pemasok atau Alamat Perusahaannya" required>
                             </div>
                         </div>
 
@@ -223,7 +227,7 @@
 @section('script')
     <script>
         function edit_data(nama, kontak, alamat, url) {
-            // console.log(nama, kontak, alamat, url);
+            console.log(nama, kontak, alamat, url);
             document.getElementById("form_update").action = url;
             document.getElementById("edit_nama").value = nama;
             document.getElementById("edit_kontak").value = kontak;

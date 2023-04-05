@@ -28,10 +28,10 @@
 
                         <div class="panel-body">
                             <div class="row mt-2">
-                                @if(Auth::user()->status=='Ketua')
+                                {{-- @if (Auth::user()->status == 'Ketua') --}}
                                 <button class="btn btn-primary mb-2 pb-2" style="margin-bottom: 25px" data-toggle="modal"
                                     data-target="#tambah"> Tambah pengelola </button>
-                                @endif
+                                {{-- @endif --}}
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <table id="datatable-responsive"
                                         class="table table-hover table-bordered dt-responsive nowrap" cellspacing="0"
@@ -43,53 +43,61 @@
                                                 <th style="text-align: center;">Status Posisi</th>
                                                 <th style="text-align: center;">Nomor Telepon</th>
                                                 <th style="text-align: center;">Foto Profil</th>
-                                                @if(Auth::user()->status=='Ketua')
+                                                {{-- @if (Auth::user()->status == 'Ketua') --}}
                                                 <th style="text-align: center;">Aksi</th>
-                                                @endif
+                                                {{-- @endif --}}
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($data as $item)
+                                            @foreach ($pengelola as $item)
                                                 <tr>
                                                     <td>
                                                         <div class="conbtn">
-                                                            {{ $loop->index + 1 }}
+                                                            {{ $loop->iteration }}
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        {{ $data == null ? 'kosong' : $item['nama'] }}
+                                                        {{ $item->nama }}
+                                                        {{-- {{ $data == null ? 'kosong' : $item['nama'] }} --}}
                                                     </td>
                                                     <td>
-                                                        {{ $data == null ? 'kosong' : $item['status'] }}
+                                                        {{ $item->status }}
+                                                        {{-- {{ $data == null ? 'kosong' : $item['status'] }} --}}
                                                     </td>
                                                     <td>
-                                                        {{ $data == null ? 'kosong' : $item['no_telp'] }}
-                                                    </td> 
-                                            <td>
-                                                <div class="conbtn">
-                                                    <img src="public\images\users\profil_holder.png" alt="profile"
-                                                        style="width: 30px; height: 30px;">
-                                                </div>
-                                            </td>
-                                            @if(Auth::user()->status =='Ketua')
-                                            <td>
-                                                
-                                                <div class="conbtn">
-                                                    <button class="btn btn-primary center fa fa-edit" data-toggle="modal"
-                                                        data-target="#edit"
-                                                        onclick="edit_data('{{ $item['nama'] }}', '{{ $item['status'] }}','{{ $item['no_telp'] }}' ,  '{{ $item['id'] }}')"></button>
-                                             
-                                                     <a href="#" class="delete" data-id="{{$item['id']}}"></button></a>
-                                                   <form id="#delete-post-form "action="{{route('deletePengelola',['id'=>$item['id']])}}" method="post">
-                                                    @csrf
-                                                        <button class="btn btn-danger center fa fa-trash delete-user" 
-                                                        style="margin-left: 2%">
-                                                    </form>
-                                                </div>
-                                               
-                                            </td>
-                                             @endif
-                                            </tr>
+                                                        {{ $item->kontak }}
+                                                        {{-- {{ $data == null ? 'kosong' : $item['no_telp'] }} --}}
+                                                    </td>
+                                                    <td>
+                                                        <div class="conbtn">
+                                                            {{-- <img src="public\images\users\profil_holder.png" alt="profile"
+                                                                style="width: 30px; height: 30px;"> --}}
+                                                        </div>
+                                                    </td>
+                                                    {{-- @if (Auth::user()->status == 'Ketua') --}}
+                                                    <td>
+
+                                                        <div class="conbtn">
+                                                            <button class="btn btn-primary center fa fa-edit"
+                                                                data-toggle="modal" data-target="#edit"
+                                                                onclick="edit_data('{{ route('pengelola.update', ['pengelola' => $item->id]) }}', '{{ $item->nama }}', '{{ $item->status }}','{{ $item->kontak }}', '{{ $item->id }}', '{{ $item->username }}')"></button>
+
+                                                            <a href="#" class="delete"
+                                                                data-id="{{ $item['id'] }}"></button></a>
+                                                            <form id="#delete-post-form "
+                                                                action="{{ route('pengelola.destroy', ['pengelola' => $item->id]) }}"
+                                                                method="post">
+                                                                @method('delete')
+                                                                @csrf
+                                                                <button
+                                                                    class="btn btn-danger center fa fa-trash delete-user"
+                                                                    style="margin-left: 2%">
+                                                            </form>
+                                                        </div>
+
+                                                    </td>
+                                                    {{-- @endif --}}
+                                                </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -116,7 +124,7 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah Data Pengelola</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route('tambahPengelola')}}" method="POST" class="form-horizontal" role="form">
+                    <form action="{{ route('pengelola.store') }}" method="POST" class="form-horizontal" role="form">
                         @csrf
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nama Pengelola</label>
@@ -129,8 +137,15 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nomor Telepon</label>
                             <div class="col-md-8">
-                                <input name="nohp" data-parsley-type="number" type="text" class="form-control"
+                                <input name="kontak" data-parsley-type="number" type="text" class="form-control"
                                     placeholder="08XXXXXXXXXX" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Username</label>
+                            <div class="col-md-8">
+                                <input name="username" type="text" class="form-control" placeholder="Username" required>
                             </div>
                         </div>
 
@@ -153,11 +168,11 @@
                         </div>
 
                         <div class="modal-footer">
-                           
+
                             <button type="button" class="btn btn-default waves-effect m-l-5"
                                 data-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-primary waves-effect waves-light">Simpan</button>
-                           
+
                         </div>
                     </form>
                 </div>
@@ -175,14 +190,14 @@
                     <h4 class="modal-title" id="myModalLabel">Edit Data Pengelola</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route('editpengelola')}}" method="POST" class="form-horizontal"
-                        role="form">
+                    <form action="" id="edit_form" method="POST" class="form-horizontal" role="form">
+                        @method('put')
                         @csrf
-                        <input type="hidden" name="id" id="id_p">
+                        <input type="hidden" name="id" id="edit_id">
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nama Pengelola</label>
                             <div class="col-md-8">
-                                <input name="nama" type="text" class="form-control" id="nama"
+                                <input name="nama" type="text" class="form-control" id="edit_nama"
                                     placeholder="Nama Lengkap Pengelola" required>
                             </div>
                         </div>
@@ -190,8 +205,16 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Nomor Telepon</label>
                             <div class="col-md-8">
-                                <input name="nohp" data-parsley-type="number" type="text" class="form-control"
-                                    id="nohp"placeholder="08XXXXXXXXXX" required />
+                                <input name="kontak" data-parsley-type="number" type="text" class="form-control"
+                                    id="edit_kontak" placeholder="08XXXXXXXXXX" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Username</label>
+                            <div class="col-md-8">
+                                <input name="username" type="text" class="form-control" placeholder="Username"
+                                    id="edit_username" required>
                             </div>
                         </div>
 
@@ -199,7 +222,7 @@
                             <label class="col-md-4 control-label">Password</label>
                             <div class="col-md-8">
                                 <input name="password" data-parsley-type="string" type="text" class="form-control"
-                                   id="password" placeholder="password" required />
+                                    id="edit_password" placeholder="password" />
                             </div>
                         </div>
 
@@ -218,7 +241,7 @@
 
                             <button type="button" class="btn btn-default waves-effect m-l-5"
                                 data-dismiss="modal">Cancel</button>
-                           <button type="submit" class="btn btn-primary waves-effect waves-light">Simpan</button>
+                            <button type="submit" class="btn btn-primary waves-effect waves-light">Simpan</button>
                         </div>
                     </form>
 
@@ -232,34 +255,35 @@
 @section('script')
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-        $('.delete-user').on('click',function(e){
+        $('.delete-user').on('click', function(e) {
             e.preventDefault();
             var form = $(this).parents('form');
             // var id= $(this).attr('data-id');
             swal({
-                title: "Ingin Menghapus?",
-                text: "Kamu akan menghapus data pengelola",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
+                    title: "Ingin Menghapus?",
+                    text: "Kamu akan menghapus data pengelola",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
                         swal("Data Berhasil Dihapus !", {
-                        icon: "success",
-                    });
-                    form.submit();
-                }
-                
-            });
+                            icon: "success",
+                        });
+                        form.submit();
+                    }
+
+                });
         });
-       
     </script>
     <script>
-        function edit_data(nama, status, nohp, id) {
-            document.getElementById("id_p").value = id;
-            document.getElementById("nama").value = nama;
-            document.getElementById("nohp").value = nohp;
+        function edit_data(url, nama, status, kontak, id, username) {
+            document.getElementById("edit_form").action = url;
+            document.getElementById("edit_id").value = id;
+            document.getElementById("edit_nama").value = nama;
+            document.getElementById("edit_kontak").value = kontak;
+            document.getElementById("edit_username").value = username;
 
             if (status == "Bendahara") {
                 document.getElementById("option-bendahara").selected = true;
